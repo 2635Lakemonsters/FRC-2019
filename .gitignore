@@ -23,7 +23,13 @@
 hs_err_pid*
 vendordeps/Phoenix.json
 
+#Thomas Changes
 build/*
 .gradle/*
 vendordeps/*
 *.bin
+.project
+.vscode/*
+.wpilib/*
+gradle/*
+.settings/*
