@@ -10,7 +10,8 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Robot;
-import frc.robot.RobotMap;;
+import frc.robot.RobotMap;
+import main.java.frc.robot.model.PathDatum;;
 
 /**
  * Add your docs here.
@@ -23,6 +24,7 @@ public class DriveSubsystem extends Subsystem {
   WPI_TalonSRX FLMotor;
   WPI_TalonSRX BLMotor;
 
+  PathDatum[] DrivePath;
 
   @Override
   public void initDefaultCommand() {
@@ -49,5 +51,34 @@ public class DriveSubsystem extends Subsystem {
 
     FRMotor.set(rightValue);
     FLMotor.set(leftValue);
+  }
+
+  public void LoadPath(String pathFile) throws IOException  {
+     //File file = new File(pathFile);
+
+    
+      FileReader fileReader = new FileReader(pathFile);
+      BufferedReader bufferedReader = new BufferedReader(fileReader);
+      List<String> lines = new ArrayList<String>();
+      String line = null;
+      while ((line = bufferedReader.readLine()) != null) {
+          lines.add(line);
+      }
+      bufferedReader.close();
+      String[] pathInfo = lines.toArray(new String[lines.size()]);
+      DrivePath = new PathDatum[lines.size()];
+
+      int arrayIndex = 0;
+      for (String pathLine : pathInfo) {
+
+        PathDatum pt = new PathDatum();
+        pt.Init(pathLine);
+        DrivePath[arrayIndex] = pt;
+
+        arrayIndex++;
+      }
+
+      
+
   }
 }
