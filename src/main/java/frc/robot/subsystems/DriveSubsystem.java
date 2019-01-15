@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.Timer;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Robot;
@@ -24,7 +26,10 @@ public class DriveSubsystem extends Subsystem {
   WPI_TalonSRX FLMotor;
   WPI_TalonSRX BLMotor;
 
-  PathDatum[] DrivePath;
+  PathDatum[] LeftDrivePath;
+  PathDatum[] RightDrivePath;
+ 
+  Timer timer = new Timer();
 
   @Override
   public void initDefaultCommand() {
@@ -53,10 +58,20 @@ public class DriveSubsystem extends Subsystem {
     FLMotor.set(leftValue);
   }
 
-  public void LoadPath(String pathFile) throws IOException  {
-     //File file = new File(pathFile);
+  long startTime;
 
-    
+  public void MotionMagic() {
+    startTime = System.currentTimeMillis();
+
+    for(int i = 0; i <= RightDrivePath.length;i++) {
+      FRMotor.set(ControlMode.motionMagic,RightDrivePath[i].position);
+    }
+    System.out.println("Took " + (System.currentTimeMillis() - startTime) + " ms");
+  }
+  public void LeftLoadPath(String pathFile) throws IOException  {
+     File file = new File(pathFile);
+
+    if(file.exists() && file.isFile()) {
       FileReader fileReader = new FileReader(pathFile);
       BufferedReader bufferedReader = new BufferedReader(fileReader);
       List<String> lines = new ArrayList<String>();
@@ -66,19 +81,49 @@ public class DriveSubsystem extends Subsystem {
       }
       bufferedReader.close();
       String[] pathInfo = lines.toArray(new String[lines.size()]);
-      DrivePath = new PathDatum[lines.size()];
+      LeftDrivePath = new PathDatum[lines.size()];
 
       int arrayIndex = 0;
       for (String pathLine : pathInfo) {
 
         PathDatum pt = new PathDatum();
         pt.Init(pathLine);
-        DrivePath[arrayIndex] = pt;
+        LeftDrivePath[arrayIndex] = pt;
 
         arrayIndex++;
       }
-
-      
-
+    }
   }
+
+  public void RightLoadPath(String pathFile) throws IOException  {
+    //File file = new File(pathFile);
+
+   
+     FileReader fileReader = new FileReader(pathFile);
+     BufferedReader bufferedReader = new BufferedReader(fileReader);
+     List<String> lines = new ArrayList<String>();
+     String line = null;
+     while ((line = bufferedReader.readLine()) != null) {
+         lines.add(line);
+     }
+     bufferedReader.close();
+     String[] pathInfo = lines.toArray(new String[lines.size()]);
+     RightDrivePath = new PathDatum[lines.size()];
+
+     int arrayIndex = 0;
+     for (String pathLine : pathInfo) {
+
+       PathDatum pt = new PathDatum();
+       pt.Init(pathLine);
+       LeftDrivePath[arrayIndex] = pt;
+
+       arrayIndex++;
+     }
+ }
+
+ public void LoadPath(String leftPathFile, String rightPathFile) {
+   LeftDrivePath(leftPathFile);
+   RightDrivePath(rightPathFile);
+ }
+
 }
