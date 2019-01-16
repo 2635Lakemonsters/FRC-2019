@@ -10,10 +10,15 @@ package frc.robot.subsystems;
 import java.util.Timer;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
-import main.java.frc.robot.model.PathDatum;;
+import frc.robot.model.PathDatum;
+import com.ctre.phoenix.motorcontrol.*;
+
+import java.io.*;
+import java.util.*;
 
 /**
  * Add your docs here.
@@ -64,12 +69,12 @@ public class DriveSubsystem extends Subsystem {
     startTime = System.currentTimeMillis();
 
     for(int i = 0; i <= RightDrivePath.length;i++) {
-      FRMotor.set(ControlMode.motionMagic,RightDrivePath[i].position);
+      FRMotor.set(ControlMode.MotionMagic, RightDrivePath[i].position);
     }
     System.out.println("Took " + (System.currentTimeMillis() - startTime) + " ms");
   }
   public void LeftLoadPath(String pathFile) throws IOException  {
-     File file = new File(pathFile);
+     java.io.File file = new java.io.File(pathFile);
 
     if(file.exists() && file.isFile()) {
       FileReader fileReader = new FileReader(pathFile);
@@ -121,9 +126,9 @@ public class DriveSubsystem extends Subsystem {
      }
  }
 
- public void LoadPath(String leftPathFile, String rightPathFile) {
-   LeftDrivePath(leftPathFile);
-   RightDrivePath(rightPathFile);
+ public void LoadPath(String leftPathFile, String rightPathFile) throws IOException {
+   LeftLoadPath(leftPathFile);
+   RightLoadPath(rightPathFile);
  }
 
 }

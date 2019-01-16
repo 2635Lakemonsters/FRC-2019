@@ -83,8 +83,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_chooser.getSelected();
-    drive.RightLoadPath();
-    drive.motionMagic();
+   /* drive.RightLoadPath("leftfile");
+    drive.motionMagic("aaa");*/
 
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector",

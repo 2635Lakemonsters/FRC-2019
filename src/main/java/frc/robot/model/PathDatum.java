@@ -1,4 +1,4 @@
- package main.java.frc.robot.model;
+ package frc.robot.model;
 
 
 
@@ -14,14 +14,14 @@ public class PathDatum {
     public double heading;
 
     public void Init(String lineStr)  {
-        string[] pathDatumStr = lineStr.split(",");
-         dt = parseDouble(pathDatumStr[0]);
-         x = parseDouble(pathDatumStr[1]);
-         y = parseDouble(pathDatumStr[2]);
-         position = parseDouble(pathDatumStr[3]);
-         acceleration = parseDouble(pathDatumStr[4]);
-         jerk = parseDouble(pathDatumStr[5]);
-         heading = parseDouble(pathDatumStr[6]);
+        String[] pathDatumStr = lineStr.split(",");
+         dt = Double.parseDouble(pathDatumStr[0]);
+         x = Double.parseDouble(pathDatumStr[1]);
+         y = Double.parseDouble(pathDatumStr[2]);
+         position = Double.parseDouble(pathDatumStr[3]);
+         acceleration = Double.parseDouble(pathDatumStr[4]);
+         jerk = Double.parseDouble(pathDatumStr[5]);
+         heading = Double.parseDouble(pathDatumStr[6]);
     }
 
 }
