@@ -7,14 +7,16 @@
 
 package frc.robot.commands;
 
+import java.io.IOException;
+
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
 /**
  * An example command.  You can replace me with your own command.
  */
-public class ExampleCommand extends Command {
-  public ExampleCommand() {
+public class PathTestCommand extends Command {
+  public PathTestCommand() {
     // Use requires() here to declare subsystem dependencies
     requires(Robot.driveSubsystem);
   }
@@ -22,17 +24,28 @@ public class ExampleCommand extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    System.out.println("--PathTestCommand Init--");
+    Robot.driveSubsystem.PathInit();
+    try {
+      Robot.driveSubsystem.LoadPath("Straight.left.pf1.csv","Straight.right.pf1.csv");
+    } catch(IOException e) {
+    }
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    Robot.driveSubsystem.MotionMagic();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    boolean isDone = Robot.driveSubsystem.isDone();
+    if(isDone){
+      System.out.println("Took " + (System.currentTimeMillis() - Robot.driveSubsystem.startTime) + " ms");
+    }
+    return isDone;
   }
 
   // Called once after isFinished returns true

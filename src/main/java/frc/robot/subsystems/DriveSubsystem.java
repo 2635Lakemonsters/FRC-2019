@@ -30,12 +30,12 @@ public class DriveSubsystem extends Subsystem {
   WPI_TalonSRX BRMotor;
   WPI_TalonSRX FLMotor;
   WPI_TalonSRX BLMotor;
-
+  public long startTime;
+  int  index;
   PathDatum[] LeftDrivePath;
   PathDatum[] RightDrivePath;
  
-  Timer timer = new Timer();
-
+ 
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
@@ -63,16 +63,23 @@ public class DriveSubsystem extends Subsystem {
     FLMotor.set(leftValue);
   }
 
-  long startTime;
+  public void PathInit()
+  {
+    startTime = System.currentTimeMillis();
+    index = 0;
+  }
 
   public void MotionMagic() {
-    startTime = System.currentTimeMillis();
-
-    for(int i = 0; i <= RightDrivePath.length;i++) {
-      FRMotor.set(ControlMode.MotionMagic, RightDrivePath[i].position);
+    if(index<RightDrivePath.length) {
+      FRMotor.set(ControlMode.MotionMagic, RightDrivePath[index].position);
+      FLMotor.set(ControlMode.MotionMagic, LeftDrivePath[index].position);
+      index++;
     }
-    System.out.println("Took " + (System.currentTimeMillis() - startTime) + " ms");
   }
+  public boolean isDone(){
+    return (index>=RightDrivePath.length);
+  }
+
   public void LeftLoadPath(String pathFile) throws IOException  {
      java.io.File file = new java.io.File(pathFile);
 
@@ -97,38 +104,46 @@ public class DriveSubsystem extends Subsystem {
 
         arrayIndex++;
       }
+    } else{
+      System.out.println("--Left path file not found: " + pathFile);
     }
   }
 
   public void RightLoadPath(String pathFile) throws IOException  {
     //File file = new File(pathFile);
 
-   
-     FileReader fileReader = new FileReader(pathFile);
-     BufferedReader bufferedReader = new BufferedReader(fileReader);
-     List<String> lines = new ArrayList<String>();
-     String line = null;
-     while ((line = bufferedReader.readLine()) != null) {
-         lines.add(line);
-     }
-     bufferedReader.close();
-     String[] pathInfo = lines.toArray(new String[lines.size()]);
-     RightDrivePath = new PathDatum[lines.size()];
+     java.io.File file = new java.io.File(pathFile);
 
-     int arrayIndex = 0;
-     for (String pathLine : pathInfo) {
+     if(file.exists() && file.isFile()) {
+      FileReader fileReader = new FileReader(pathFile);
+      BufferedReader bufferedReader = new BufferedReader(fileReader);
+      List<String> lines = new ArrayList<String>();
+      String line = null;
+      while ((line = bufferedReader.readLine()) != null) {
+          lines.add(line);
+      }
+      bufferedReader.close();
+      String[] pathInfo = lines.toArray(new String[lines.size()]);
+      RightDrivePath = new PathDatum[lines.size()];
 
-       PathDatum pt = new PathDatum();
-       pt.Init(pathLine);
-       LeftDrivePath[arrayIndex] = pt;
+      int arrayIndex = 0;
+      for (String pathLine : pathInfo) {
 
-       arrayIndex++;
-     }
+        PathDatum pt = new PathDatum();
+        pt.Init(pathLine);
+        LeftDrivePath[arrayIndex] = pt;
+
+        arrayIndex++;
+      }
+    }else{
+      System.out.println("--Right path file not found: " + pathFile);
+    }
  }
 
  public void LoadPath(String leftPathFile, String rightPathFile) throws IOException {
    LeftLoadPath(leftPathFile);
    RightLoadPath(rightPathFile);
+
  }
 
 }
