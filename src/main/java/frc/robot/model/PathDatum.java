@@ -1,4 +1,4 @@
- package frc.robot.model;
+ package main.java.frc.robot.model;
 
 
 

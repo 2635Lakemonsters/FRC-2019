@@ -31,5 +31,4 @@ vendordeps/*
 .project
 .vscode/*
 .wpilib/*
-gradle/*
 .settings/*
