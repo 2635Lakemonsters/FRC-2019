@@ -8,7 +8,7 @@ Implemented in DriveSubsystem and PathTestCommand.
 
 # Controls
 Control implementation with Joysticks has not been Finsished.
-Button Mapping:
+Button Mapping (Not Offical, Good Place to put this information though):
 1. LJoy1 - DriveSwitch
 2. RJoy1 - Kicker
 
