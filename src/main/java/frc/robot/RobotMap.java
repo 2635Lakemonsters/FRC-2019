@@ -30,5 +30,23 @@ public class RobotMap {
   public static int BACK_RIGHT_MOTOR_CHANNEL = 2;
   public static int FRONT_LEFT_MOTOR_CHANNEL = 3;
   public static int BACK_LEFT_MOTOR_CHANNEL = 4;
+
+  //--------EXPERIMENTAL PATHWEAVER CONSTANTS------------
+  public static final int k_ticks_per_rev = 1024;
+  public static final double k_wheel_diameter = 4.0 / 12.0;
+  public static final double k_max_velocity = 10;
+
+  public static final int k_left_channel = 0;
+  public static final int k_right_channel = 1;
+
+  public static final int k_left_encoder_port_a = 0;
+  public static final int k_left_encoder_port_b = 1;
+  public static final int k_right_encoder_port_a = 2;
+  public static final int k_right_encoder_port_b = 3;
+
+  public static final int k_gyro_port = 0;
+
+  public static final String k_path_name = "example";
+  //------------------------------------------------------
   
 }

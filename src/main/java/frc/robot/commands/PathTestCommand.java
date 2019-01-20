@@ -18,7 +18,7 @@ import frc.robot.Robot;
 public class PathTestCommand extends Command {
   public PathTestCommand() {
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.driveSubsystem);
+    // requires(Robot.driveSubsystem);
   }
 
   // Called just before this Command runs the first time
@@ -27,8 +27,9 @@ public class PathTestCommand extends Command {
     System.out.println("--PathTestCommand Init--");
     Robot.driveSubsystem.PathInit();
     try {
-      Robot.driveSubsystem.LoadPath("Straight.left.pf1.csv","Straight.right.pf1.csv");
+      Robot.driveSubsystem.LoadPath("/home/lvuser/deploy/Straight.left.pf1.csv","/home/lvuser/deploy/Straight.right.pf1.csv");
     } catch(IOException e) {
+      System.out.println("Could Not Load Path in PathTestCommand");
     }
   }
 

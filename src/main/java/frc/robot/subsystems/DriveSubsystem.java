@@ -11,6 +11,7 @@ import java.util.Timer;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
@@ -34,6 +35,7 @@ public class DriveSubsystem extends Subsystem {
   int  index;
   PathDatum[] LeftDrivePath;
   PathDatum[] RightDrivePath;
+  Solenoid gearBoxSolenoid;
  
  
   @Override
@@ -47,6 +49,8 @@ public class DriveSubsystem extends Subsystem {
     BRMotor = new WPI_TalonSRX(RobotMap.BACK_RIGHT_MOTOR_CHANNEL);
     FLMotor = new WPI_TalonSRX(RobotMap.FRONT_LEFT_MOTOR_CHANNEL);
     BLMotor = new WPI_TalonSRX(RobotMap.BACK_LEFT_MOTOR_CHANNEL);
+
+    gearBoxSolenoid = new Solenoid(7);
 
     BRMotor.follow(FRMotor);
     BLMotor.follow(FLMotor);
@@ -67,10 +71,26 @@ public class DriveSubsystem extends Subsystem {
   {
     startTime = System.currentTimeMillis();
     index = 0;
+    reset();
+    FRMotor.configMotionCruiseVelocity(200, 0);
+		FLMotor.configMotionCruiseVelocity(200, 0);
+
+		FRMotor.configMotionAcceleration(100, 0);
+		FLMotor.configMotionAcceleration(100, 0);
+    //FLMotor.configMotionCruiseVelocity(sensorUnitsPer100ms)
+    //FRMotor.configMotionCruiseVelocity
+  }
+  public void reset(){
+    FRMotor.setSelectedSensorPosition(0, 0, 0);
+    FLMotor.setSelectedSensorPosition(0, 0, 0);
+    
+    FLMotor.set(ControlMode.PercentOutput, 0);
+    FRMotor.set(ControlMode.PercentOutput, 0);
   }
 
   public void MotionMagic() {
     if(index<RightDrivePath.length) {
+      System.out.println("position: "+RightDrivePath[index].position);
       FRMotor.set(ControlMode.MotionMagic, RightDrivePath[index].position);
       FLMotor.set(ControlMode.MotionMagic, LeftDrivePath[index].position);
       index++;
@@ -92,6 +112,7 @@ public class DriveSubsystem extends Subsystem {
           lines.add(line);
       }
       bufferedReader.close();
+      lines.remove(0);
       String[] pathInfo = lines.toArray(new String[lines.size()]);
       LeftDrivePath = new PathDatum[lines.size()];
 
@@ -123,6 +144,7 @@ public class DriveSubsystem extends Subsystem {
           lines.add(line);
       }
       bufferedReader.close();
+      lines.remove(0);
       String[] pathInfo = lines.toArray(new String[lines.size()]);
       RightDrivePath = new PathDatum[lines.size()];
 
@@ -131,7 +153,7 @@ public class DriveSubsystem extends Subsystem {
 
         PathDatum pt = new PathDatum();
         pt.Init(pathLine);
-        LeftDrivePath[arrayIndex] = pt;
+        RightDrivePath[arrayIndex] = pt;
 
         arrayIndex++;
       }
@@ -144,6 +166,23 @@ public class DriveSubsystem extends Subsystem {
    LeftLoadPath(leftPathFile);
    RightLoadPath(rightPathFile);
 
+ }
+
+ boolean bullyMode = true;
+ public void switchDriveMode(){
+  /*
+  This function is for changing in and out of buly mode on the 2018 robot. 
+  This code may or may not need to be removed on the final robot if we decide to have another bull mode this year
+  */
+
+  bullyMode = !bullyMode;
+  gearBoxSolenoid.set(bullyMode);
+ }
+
+ public void bullyOff(){
+   bullyMode= false;
+
+   gearBoxSolenoid.set(bullyMode);
  }
 
 }

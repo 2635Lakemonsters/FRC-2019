@@ -9,12 +9,22 @@ package frc.robot;
 
 import java.io.IOException;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ExampleCommand;
+import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.PathfinderFRC;
+import jaci.pathfinder.Trajectory;
+import jaci.pathfinder.followers.EncoderFollower;
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
 
@@ -32,18 +42,20 @@ public class Robot extends TimedRobot {
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
-
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
    */
+  CANSparkMax motor;
   @Override
   public void robotInit() {
+    
     oi = new OI();
+    driveSubsystem = new DriveSubsystem();
+    motor = new CANSparkMax(0, MotorType.kBrushless);
     m_chooser.setDefaultOption("Default Auto", new PathTestCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
-    driveSubsystem = new DriveSubsystem();
   }
 
   /**
@@ -100,6 +112,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.start();
       }
+      driveSubsystem.bullyOff();
   }
 
   /**
@@ -119,6 +132,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    driveSubsystem.bullyOff();
   }
 
   /**
@@ -128,6 +142,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
     driveSubsystem.driveLoop();
+    motor.set(0.3);
   }
 
   /**
