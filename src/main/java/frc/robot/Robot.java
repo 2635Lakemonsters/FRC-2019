@@ -46,13 +46,12 @@ public class Robot extends TimedRobot {
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
    */
-  CANSparkMax motor;
+  
   @Override
   public void robotInit() {
     
     oi = new OI();
     driveSubsystem = new DriveSubsystem();
-    motor = new CANSparkMax(0, MotorType.kBrushless);
     m_chooser.setDefaultOption("Default Auto", new PathTestCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
@@ -97,8 +96,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+
+    //-------EXPERIMENTAL PATH WEAVER CODE-----------
+    driveSubsystem.ExperimentalPathAutoInit();
+    //---------------------------------------------
+    
     m_autonomousCommand = m_chooser.getSelected();
     
+
     //drive.motionMagic("aaa");
 
     /*
@@ -125,6 +130,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    
+    //-------EXPERIMENTAL PATH WEAVER CODE-----------
+    driveSubsystem.endPath();
+    //--------------------------------------------
+
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -142,7 +152,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
     driveSubsystem.driveLoop();
-    motor.set(0.3);
+    
   }
 
   /**

@@ -16,6 +16,16 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.model.PathDatum;
+import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.PathfinderFRC;
+import jaci.pathfinder.Trajectory;
+import jaci.pathfinder.followers.EncoderFollower;
+import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.TimedRobot;
 import com.ctre.phoenix.motorcontrol.*;
 
 import java.io.*;
@@ -31,13 +41,25 @@ public class DriveSubsystem extends Subsystem {
   WPI_TalonSRX BRMotor;
   WPI_TalonSRX FLMotor;
   WPI_TalonSRX BLMotor;
+
   public long startTime;
   int  index;
   PathDatum[] LeftDrivePath;
   PathDatum[] RightDrivePath;
   Solenoid gearBoxSolenoid;
- 
- 
+
+  //---------EXPERIMENTAL PATH WEAVER CODE----------
+  Encoder m_left_encoder;
+  Encoder m_right_encoder;
+
+  AnalogGyro m_gyro;
+
+  EncoderFollower m_left_follower;
+  EncoderFollower m_right_follower;
+  
+  Notifier m_follower_notifier;
+  //-----------------------------------------------
+
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
@@ -50,10 +72,18 @@ public class DriveSubsystem extends Subsystem {
     FLMotor = new WPI_TalonSRX(RobotMap.FRONT_LEFT_MOTOR_CHANNEL);
     BLMotor = new WPI_TalonSRX(RobotMap.BACK_LEFT_MOTOR_CHANNEL);
 
+    
+
     gearBoxSolenoid = new Solenoid(7);
 
     BRMotor.follow(FRMotor);
     BLMotor.follow(FLMotor);
+
+    //----EXPERIMENTAL PATH WEAVER CODE----------------
+    m_left_encoder = new Encoder(RobotMap.k_left_encoder_port_a, RobotMap.k_left_encoder_port_b);
+    m_right_encoder = new Encoder(RobotMap.k_right_encoder_port_a, RobotMap.k_right_encoder_port_b);
+    m_gyro = new AnalogGyro(RobotMap.k_gyro_port);
+    //-------------------------------------------
   }
 
   public void driveLoop(){
@@ -66,7 +96,48 @@ public class DriveSubsystem extends Subsystem {
     FRMotor.set(rightValue);
     FLMotor.set(leftValue);
   }
+  //---------EXPERIMENTAL PATH WEAVER CODE-----------
+  
+  public void ExperimentalPathAutoInit() {
+    Trajectory left_trajectory = PathfinderFRC.getTrajectory(RobotMap.k_path_name + ".left"); //change this depending on which side
+    Trajectory right_trajectory = PathfinderFRC.getTrajectory(RobotMap.k_path_name + ".right");
 
+    m_left_follower = new EncoderFollower(left_trajectory);
+    m_right_follower = new EncoderFollower(right_trajectory);
+
+    m_left_follower.configureEncoder(m_left_encoder.get(), RobotMap.k_ticks_per_rev, RobotMap.k_wheel_diameter);
+    // You must tune the PID values on the following line!
+    m_left_follower.configurePIDVA(1.0, 0.0, 0.0, 1 / RobotMap.k_max_velocity, 0);
+
+    m_right_follower.configureEncoder(m_right_encoder.get(), RobotMap.k_ticks_per_rev, RobotMap.k_wheel_diameter);
+    // You must tune the PID values on the following line!
+    m_right_follower.configurePIDVA(1.0, 0.0, 0.0, 1 / RobotMap.k_max_velocity, 0);
+    
+    m_follower_notifier = new Notifier(this::followPath);
+    m_follower_notifier.startPeriodic(left_trajectory.get(0).dt);
+  }
+
+  public void followPath() {
+    if (m_left_follower.isFinished() || m_right_follower.isFinished()) {
+      m_follower_notifier.stop();
+    } else {
+      double left_speed = m_left_follower.calculate(m_left_encoder.get());
+      double right_speed = m_right_follower.calculate(m_right_encoder.get());
+      double heading = m_gyro.getAngle();
+      double desired_heading = Pathfinder.r2d(m_left_follower.getHeading());
+      double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
+      double turn =  0.8 * (-1.0/80.0) * heading_difference;
+      FRMotor.set(left_speed + turn);
+      FLMotor.set(right_speed - turn);
+    }
+  }
+  public void endPath() {
+    m_follower_notifier.stop();
+    FRMotor.set(0);
+    FLMotor.set(0);
+  }
+
+//-----------------------------------------------------------------------------
   public void PathInit()
   {
     startTime = System.currentTimeMillis();
