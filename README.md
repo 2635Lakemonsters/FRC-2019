@@ -16,6 +16,8 @@ Table of Contents
 
 [Swerve Drive](#swerve)
 
+[Controls](#control)
+
 <a name="pathweaver"></a>
 # Pathweaver
 All pathweaver paths are in the src/main/deploy.
@@ -133,7 +135,7 @@ Trajectory bl = modifier.getBackLeftTrajectory();        // Get the Back Left wh
 Trajectory br = modifier.getBackRightTrajectory();       // Get the Back Right wheel
 ```
 
-<a name="controls"></a>
+<a name="control"></a>
 # Controls
 Control implementation with Joysticks has not been Finsished.
 Button Mapping:
