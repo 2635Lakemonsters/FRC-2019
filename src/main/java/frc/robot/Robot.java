@@ -52,7 +52,7 @@ public class Robot extends TimedRobot {
     
     oi = new OI();
     driveSubsystem = new DriveSubsystem();
-    m_chooser.setDefaultOption("Default Auto", new PathTestCommand());
+    //m_chooser.setDefaultOption("Default Auto", new PathTestCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
   }
@@ -132,7 +132,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     
     //-------EXPERIMENTAL PATH WEAVER CODE-----------
-    driveSubsystem.endPath();
+    //driveSubsystem.endPath();
     //--------------------------------------------
 
     // This makes sure that the autonomous stops running when

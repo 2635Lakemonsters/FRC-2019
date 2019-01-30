@@ -18,10 +18,12 @@ import frc.robot.RobotMap;
 import frc.robot.model.PathDatum;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.PathfinderFRC;
+import jaci.pathfinder.PathfinderJNI;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.followers.EncoderFollower;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -98,10 +100,18 @@ public class DriveSubsystem extends Subsystem {
   }
   //---------EXPERIMENTAL PATH WEAVER CODE-----------
   
-  public void ExperimentalPathAutoInit() {
-    Trajectory left_trajectory = PathfinderFRC.getTrajectory(RobotMap.k_path_name + ".left"); //change this depending on which side
-    Trajectory right_trajectory = PathfinderFRC.getTrajectory(RobotMap.k_path_name + ".right");
 
+  public void ExperimentalPathAutoInit() {
+
+    //System.out.println("Test Out");
+    //File tmep = new File(Filesystem.getDeployDirectory(), "paths/" + "Straight.left" + ".pf1.csv");
+    //File tmep = new File("/home/lvuser/deploy/paths/Straight.left.pf1.csv");
+    //Trajectory feu = new Trajectory(PathfinderJNI.trajectoryDeserializeCSV(tmep.getAbsolutePath()));
+    //System.out.println(tmep.exists());
+    //System.out.println(Filesystem.getDeployDirectory().toString() + "/paths/" + "Straight.left" + ".pf1.csv");
+    Trajectory left_trajectory = PathfinderFRC.getTrajectory("Straight.left"); //change this depending on which side
+    Trajectory right_trajectory = PathfinderFRC.getTrajectory("Straight.right");
+    //System.out.println("TestEnd");
     m_left_follower = new EncoderFollower(left_trajectory);
     m_right_follower = new EncoderFollower(right_trajectory);
 
