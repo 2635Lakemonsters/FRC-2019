@@ -76,6 +76,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    if(autoHappened){
+      driveSubsystem.endPath();
+      autoHappened = false;
+    }
   }
 
   @Override
@@ -94,6 +98,8 @@ public class Robot extends TimedRobot {
    * chooser code above (like the commented example) or additional comparisons
    * to the switch structure below with additional strings & commands.
    */
+boolean autoHappened = false;
+
   @Override
   public void autonomousInit() {
 
@@ -101,7 +107,7 @@ public class Robot extends TimedRobot {
     driveSubsystem.ExperimentalPathAutoInit();
     //---------------------------------------------
     
-    m_autonomousCommand = m_chooser.getSelected();
+    //m_autonomousCommand = m_chooser.getSelected();
     
 
     //drive.motionMagic("aaa");
@@ -115,9 +121,10 @@ public class Robot extends TimedRobot {
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      m_autonomousCommand.start();
+      //m_autonomousCommand.start();
       }
       driveSubsystem.bullyOff();
+      autoHappened = true;
   }
 
   /**
@@ -126,13 +133,18 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     Scheduler.getInstance().run();
+    //driveSubsystem.bullyOff();
   }
 
+  boolean boolistatus;
   @Override
   public void teleopInit() {
     
     //-------EXPERIMENTAL PATH WEAVER CODE-----------
-    //driveSubsystem.endPath();
+    if(autoHappened){
+      driveSubsystem.endPath();
+      autoHappened = false;
+    }
     //--------------------------------------------
 
     // This makes sure that the autonomous stops running when
@@ -143,6 +155,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     driveSubsystem.bullyOff();
+    boolistatus = false;
   }
 
   /**
@@ -152,7 +165,15 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
     driveSubsystem.driveLoop();
-    
+
+    if(oi.leftJoy.getRawButton(3) && boolistatus == false){
+      driveSubsystem.switchDriveMode();
+      boolistatus = true;
+    }else if(!oi.leftJoy.getRawButton(3) && boolistatus == true){
+      boolistatus = false;
+    }
+    System.out.println("Left Position: " + driveSubsystem.FLMotor.getSelectedSensorPosition(0));
+    System.out.println("Right Position: " + driveSubsystem.FRMotor.getSelectedSensorPosition(0));
   }
 
   /**

@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import java.util.Timer;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -28,6 +29,8 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.SerialPort.Port;
+
 import com.ctre.phoenix.motorcontrol.*;
 
 import java.io.*;
@@ -39,9 +42,9 @@ import java.util.*;
 public class DriveSubsystem extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  WPI_TalonSRX FRMotor;
+  public WPI_TalonSRX FRMotor;
   WPI_TalonSRX BRMotor;
-  WPI_TalonSRX FLMotor;
+  public WPI_TalonSRX FLMotor;
   WPI_TalonSRX BLMotor;
 
   public long startTime;
@@ -51,10 +54,11 @@ public class DriveSubsystem extends Subsystem {
   Solenoid gearBoxSolenoid;
 
   //---------EXPERIMENTAL PATH WEAVER CODE----------
-  Encoder m_left_encoder;
-  Encoder m_right_encoder;
+  // Encoder m_left_encoder;
+  // Encoder m_right_encoder;
 
-  AnalogGyro m_gyro;
+  //AnalogGyro m_gyro;
+  //AHRS tmepg;
 
   EncoderFollower m_left_follower;
   EncoderFollower m_right_follower;
@@ -74,23 +78,28 @@ public class DriveSubsystem extends Subsystem {
     FLMotor = new WPI_TalonSRX(RobotMap.FRONT_LEFT_MOTOR_CHANNEL);
     BLMotor = new WPI_TalonSRX(RobotMap.BACK_LEFT_MOTOR_CHANNEL);
 
-    
+    FRMotor.setSensorPhase(true);
+    FLMotor.setSensorPhase(false);
 
     gearBoxSolenoid = new Solenoid(7);
 
     BRMotor.follow(FRMotor);
     BLMotor.follow(FLMotor);
+    
 
-    //----EXPERIMENTAL PATH WEAVER CODE----------------
-    m_left_encoder = new Encoder(RobotMap.k_left_encoder_port_a, RobotMap.k_left_encoder_port_b);
-    m_right_encoder = new Encoder(RobotMap.k_right_encoder_port_a, RobotMap.k_right_encoder_port_b);
-    m_gyro = new AnalogGyro(RobotMap.k_gyro_port);
+    //----EXPERIMENTAL PATH WEAVER CODE-----1``121  qjhB-----------
+    // m_left_encoder = new Encoder();
+    // m_right_encoder = new Encoder();
+    //tmepg = new AHRS(Port.kMXP);
+    
+    //m_gyro = new AnalogGyro(RobotMap.k_gyro_port);
     //-------------------------------------------
   }
 
+  public double leftValue;
+  public double rightValue;
   public void driveLoop(){
-    double leftValue;
-    double rightValue;
+    
 
     leftValue = -Robot.oi.leftJoy.getRawAxis(1);
     rightValue = Robot.oi.rightJoy.getRawAxis(1);
@@ -102,46 +111,55 @@ public class DriveSubsystem extends Subsystem {
   
 
   public void ExperimentalPathAutoInit() {
-
+    FRMotor.setSelectedSensorPosition(0, 0, 0);
+    FLMotor.setSelectedSensorPosition(0, 0, 0);
+    
     //System.out.println("Test Out");
     //File tmep = new File(Filesystem.getDeployDirectory(), "paths/" + "Straight.left" + ".pf1.csv");
     //File tmep = new File("/home/lvuser/deploy/paths/Straight.left.pf1.csv");
     //Trajectory feu = new Trajectory(PathfinderJNI.trajectoryDeserializeCSV(tmep.getAbsolutePath()));
     //System.out.println(tmep.exists());
     //System.out.println(Filesystem.getDeployDirectory().toString() + "/paths/" + "Straight.left" + ".pf1.csv");
-    Trajectory left_trajectory = PathfinderFRC.getTrajectory("Straight.left"); //change this depending on which side
-    Trajectory right_trajectory = PathfinderFRC.getTrajectory("Straight.right");
+    Trajectory left_trajectory = PathfinderFRC.getTrajectory("DriveStraight.right"); //change this depending on which side
+    Trajectory right_trajectory = PathfinderFRC.getTrajectory("DriveStraight.left");
     //System.out.println("TestEnd");
     m_left_follower = new EncoderFollower(left_trajectory);
     m_right_follower = new EncoderFollower(right_trajectory);
 
-    m_left_follower.configureEncoder(m_left_encoder.get(), RobotMap.k_ticks_per_rev, RobotMap.k_wheel_diameter);
+    m_left_follower.configureEncoder(FLMotor.getSelectedSensorPosition(0), RobotMap.k_ticks_per_rev, RobotMap.k_wheel_diameter);
     // You must tune the PID values on the following line!
-    m_left_follower.configurePIDVA(1.0, 0.0, 0.0, 1 / RobotMap.k_max_velocity, 0);
+    m_left_follower.configurePIDVA(0.1, 0.0, 0.25, 1 / RobotMap.k_max_velocity, 0); //1 / RobotMap.k_max_velocity
 
-    m_right_follower.configureEncoder(m_right_encoder.get(), RobotMap.k_ticks_per_rev, RobotMap.k_wheel_diameter);
+    m_right_follower.configureEncoder(FRMotor.getSelectedSensorPosition(0), RobotMap.k_ticks_per_rev, RobotMap.k_wheel_diameter);
     // You must tune the PID values on the following line!
-    m_right_follower.configurePIDVA(1.0, 0.0, 0.0, 1 / RobotMap.k_max_velocity, 0);
+    m_right_follower.configurePIDVA(0.1, 0.0, 0.25, 1 / RobotMap.k_max_velocity, 0);
+    
+    //tmepg.reset();
     
     m_follower_notifier = new Notifier(this::followPath);
     m_follower_notifier.startPeriodic(left_trajectory.get(0).dt);
+    System.out.println("Dt: " + left_trajectory.get(0).dt);
   }
 
   public void followPath() {
     if (m_left_follower.isFinished() || m_right_follower.isFinished()) {
-      m_follower_notifier.stop();
+      endPath();
     } else {
-      double left_speed = m_left_follower.calculate(m_left_encoder.get());
-      double right_speed = m_right_follower.calculate(m_right_encoder.get());
-      double heading = m_gyro.getAngle();
+      double left_speed = m_left_follower.calculate(FLMotor.getSelectedSensorPosition(0));
+      double right_speed = m_right_follower.calculate(FRMotor.getSelectedSensorPosition(0));
+      
+      //double heading = tmepg.getAngle();
       double desired_heading = Pathfinder.r2d(m_left_follower.getHeading());
-      double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
-      double turn =  0.8 * (-1.0/80.0) * heading_difference;
-      FRMotor.set(left_speed + turn);
-      FLMotor.set(right_speed - turn);
+      //double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
+      //double turn =  0.8 * (-1.0/80.0) * heading_difference;
+      FRMotor.set(ControlMode.PercentOutput, -(right_speed /*+ turn*/) );
+      FLMotor.set(ControlMode.PercentOutput, left_speed /*- turn*/);
+      //System.out.println("Controller Position: " + right_speed + " Left: " + left_speed);
+      System.out.println(left_speed);
     }
   }
   public void endPath() {
+    
     m_follower_notifier.stop();
     FRMotor.set(0);
     FLMotor.set(0);
