@@ -58,7 +58,7 @@ public class DriveSubsystem extends Subsystem {
   // Encoder m_right_encoder;
 
   //AnalogGyro m_gyro;
-  //AHRS tmepg;
+  AHRS m_gyro;
 
   EncoderFollower m_left_follower;
   EncoderFollower m_right_follower;
@@ -90,7 +90,7 @@ public class DriveSubsystem extends Subsystem {
     //----EXPERIMENTAL PATH WEAVER CODE-----1``121  qjhB-----------
     // m_left_encoder = new Encoder();
     // m_right_encoder = new Encoder();
-    //tmepg = new AHRS(Port.kMXP);
+    m_gyro = new AHRS(Port.kMXP);
     
     //m_gyro = new AnalogGyro(RobotMap.k_gyro_port);
     //-------------------------------------------
@@ -128,13 +128,14 @@ public class DriveSubsystem extends Subsystem {
 
     m_left_follower.configureEncoder(FLMotor.getSelectedSensorPosition(0), RobotMap.k_ticks_per_rev, RobotMap.k_wheel_diameter);
     // You must tune the PID values on the following line!
-    m_left_follower.configurePIDVA(0.1, 0.0, 0.25, 1 / RobotMap.k_max_velocity, 0); //1 / RobotMap.k_max_velocity
+    //m_left_follower.configurePIDVA(0.1, 0.0, 0.25, 1 / RobotMap.k_max_velocity, 0); //1 / RobotMap.k_max_velocity
+    m_left_follower.configurePIDVA(0.2, 0.0, 0.08, 0.075, 0.045); //1 / RobotMap.k_max_velocity
 
     m_right_follower.configureEncoder(FRMotor.getSelectedSensorPosition(0), RobotMap.k_ticks_per_rev, RobotMap.k_wheel_diameter);
     // You must tune the PID values on the following line!
-    m_right_follower.configurePIDVA(0.1, 0.0, 0.25, 1 / RobotMap.k_max_velocity, 0);
-    
-    //tmepg.reset();
+    //m_right_follower.configurePIDVA(0.1, 0.0, 0.25, 1 / RobotMap.k_max_velocity, 0);
+    m_right_follower.configurePIDVA(0.2, 0.0, 0.08,0.075, 0.045);
+    m_gyro.reset();
     
     m_follower_notifier = new Notifier(this::followPath);
     m_follower_notifier.startPeriodic(left_trajectory.get(0).dt);
@@ -148,13 +149,14 @@ public class DriveSubsystem extends Subsystem {
       double left_speed = m_left_follower.calculate(FLMotor.getSelectedSensorPosition(0));
       double right_speed = m_right_follower.calculate(FRMotor.getSelectedSensorPosition(0));
       
-      //double heading = tmepg.getAngle();
+      double heading = m_gyro.getAngle();
       double desired_heading = Pathfinder.r2d(m_left_follower.getHeading());
-      //double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
-      //double turn =  0.8 * (-1.0/80.0) * heading_difference;
-      FRMotor.set(ControlMode.PercentOutput, -(right_speed /*+ turn*/) );
-      FLMotor.set(ControlMode.PercentOutput, left_speed /*- turn*/);
+      double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
+      double turn =  0.8 * (-1.0/80.0) * heading_difference;
+      FRMotor.set(ControlMode.PercentOutput, -(right_speed - turn) );
+      FLMotor.set(ControlMode.PercentOutput, left_speed + turn);
       //System.out.println("Controller Position: " + right_speed + " Left: " + left_speed);
+      System.out.println("Gyro heading: " + heading + " turn: " + turn);
       System.out.println(left_speed);
     }
   }
