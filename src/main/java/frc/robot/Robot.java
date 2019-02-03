@@ -40,6 +40,9 @@ public class Robot extends TimedRobot {
   public static OI oi;
   public static DriveSubsystem driveSubsystem;
 
+  SPathLeftCmd sPathLeftCmd;
+  DriveCommand driveCommand;
+
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
   /**
@@ -52,9 +55,12 @@ public class Robot extends TimedRobot {
     
     oi = new OI();
     driveSubsystem = new DriveSubsystem();
+    sPathLeftCmd = new SPathLeftCmd();
+    driveCommand = new DriveCommand();
     //m_chooser.setDefaultOption("Default Auto", new PathTestCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
+    oi.sPathButton.whenPressed(sPathLeftCmd);
   }
 
   /**
@@ -76,6 +82,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    if (driveCommand != null && driveCommand.isRunning())
+		{
+			driveCommand.cancel();
+		}
     if(autoHappened){
       driveSubsystem.endPath();
       autoHappened = false;
@@ -140,6 +150,10 @@ boolean autoHappened = false;
   @Override
   public void teleopInit() {
     
+		if (driveCommand != null) {
+			driveCommand.start();
+		}
+    
     //-------EXPERIMENTAL PATH WEAVER CODE-----------
     if(autoHappened){
       driveSubsystem.endPath();
@@ -164,7 +178,7 @@ boolean autoHappened = false;
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
-    driveSubsystem.driveLoop();
+    
 
     if(oi.leftJoy.getRawButton(3) && boolistatus == false){
       driveSubsystem.switchDriveMode();
@@ -172,8 +186,8 @@ boolean autoHappened = false;
     }else if(!oi.leftJoy.getRawButton(3) && boolistatus == true){
       boolistatus = false;
     }
-    System.out.println("Left Position: " + driveSubsystem.FLMotor.getSelectedSensorPosition(0));
-    System.out.println("Right Position: " + driveSubsystem.FRMotor.getSelectedSensorPosition(0));
+    //System.out.println("Left Position: " + driveSubsystem.FLMotor.getSelectedSensorPosition(0));
+    //System.out.println("Right Position: " + driveSubsystem.FRMotor.getSelectedSensorPosition(0));
   }
 
   /**

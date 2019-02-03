@@ -31,9 +31,11 @@ public class RobotMap {
   public static int FRONT_LEFT_MOTOR_CHANNEL = 3;
   public static int BACK_LEFT_MOTOR_CHANNEL = 4;
 
+  public static int S_PATH_LEFT_BUTTON = 1;
+
   //--------EXPERIMENTAL PATHWEAVER CONSTANTS------------
   public static final int k_ticks_per_rev = 4096/3;
-  public static final double k_wheel_diameter = 0.5; //feet!
+  public static final double k_wheel_diameter = 0.49; //feet!
   public static final double k_max_velocity = 10.0;
 
   // public static final int k_left_channel = 0;

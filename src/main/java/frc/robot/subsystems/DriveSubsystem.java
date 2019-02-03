@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
+import frc.robot.commands.DriveCommand;
 import frc.robot.model.PathDatum;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.PathfinderFRC;
@@ -25,6 +26,7 @@ import jaci.pathfinder.followers.EncoderFollower;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -60,8 +62,8 @@ public class DriveSubsystem extends Subsystem {
   //AnalogGyro m_gyro;
   AHRS m_gyro;
 
-  EncoderFollower m_left_follower;
-  EncoderFollower m_right_follower;
+  public EncoderFollower m_left_follower;
+  public EncoderFollower m_right_follower;
   
   Notifier m_follower_notifier;
   //-----------------------------------------------
@@ -70,6 +72,7 @@ public class DriveSubsystem extends Subsystem {
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
+    setDefaultCommand(new DriveCommand());
   }
 
   public DriveSubsystem(){
@@ -86,11 +89,11 @@ public class DriveSubsystem extends Subsystem {
     BRMotor.follow(FRMotor);
     BLMotor.follow(FLMotor);
     
-
-    //----EXPERIMENTAL PATH WEAVER CODE-----1``121  qjhB-----------
+    
+    //----EXPERIMENTAL PATH WEAVER CODE----------------
     // m_left_encoder = new Encoder();
     // m_right_encoder = new Encoder();
-    m_gyro = new AHRS(Port.kMXP);
+    m_gyro = new AHRS(I2C.Port.kMXP);
     
     //m_gyro = new AnalogGyro(RobotMap.k_gyro_port);
     //-------------------------------------------
@@ -98,15 +101,21 @@ public class DriveSubsystem extends Subsystem {
 
   public double leftValue;
   public double rightValue;
-  public void driveLoop(){
-    
 
-    leftValue = -Robot.oi.leftJoy.getRawAxis(1);
-    rightValue = Robot.oi.rightJoy.getRawAxis(1);
+  // public void driveLoop(){
+  //   leftValue = -Robot.oi.leftJoy.getRawAxis(1);
+  //   rightValue = Robot.oi.rightJoy.getRawAxis(1);
+  // }
 
-    FRMotor.set(rightValue);
-    FLMotor.set(leftValue);
-  }
+  public void tankDrive(double left, double right) {
+		double absleft = Math.abs(left);
+		double absright = Math.abs(right);
+		if(absleft<0.05) left = 0;
+    if(absright<0.05) right = 0;
+    FRMotor.set(right);
+    FLMotor.set(-left);
+			
+		}
   //---------EXPERIMENTAL PATH WEAVER CODE-----------
   
 
@@ -120,9 +129,12 @@ public class DriveSubsystem extends Subsystem {
     //Trajectory feu = new Trajectory(PathfinderJNI.trajectoryDeserializeCSV(tmep.getAbsolutePath()));
     //System.out.println(tmep.exists());
     //System.out.println(Filesystem.getDeployDirectory().toString() + "/paths/" + "Straight.left" + ".pf1.csv");
-    Trajectory left_trajectory = PathfinderFRC.getTrajectory("DriveStraight.right"); //change this depending on which side
-    Trajectory right_trajectory = PathfinderFRC.getTrajectory("DriveStraight.left");
+   // Trajectory left_trajectory = PathfinderFRC.getTrajectory("Curved.right"); //change this depending on which side
+    //Trajectory right_trajectory = PathfinderFRC.getTrajectory("Curved.left");
     //System.out.println("TestEnd");
+    Trajectory left_trajectory = PathfinderFRC.getTrajectory("Autonomous1.right"); //change this depending on which side
+    Trajectory right_trajectory = PathfinderFRC.getTrajectory("Autonomous1.left");
+    
     m_left_follower = new EncoderFollower(left_trajectory);
     m_right_follower = new EncoderFollower(right_trajectory);
 
@@ -152,12 +164,16 @@ public class DriveSubsystem extends Subsystem {
       double heading = m_gyro.getAngle();
       double desired_heading = Pathfinder.r2d(m_left_follower.getHeading());
       double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
-      double turn =  0.8 * (-1.0/80.0) * heading_difference;
-      FRMotor.set(ControlMode.PercentOutput, -(right_speed - turn) );
-      FLMotor.set(ControlMode.PercentOutput, left_speed + turn);
-      //System.out.println("Controller Position: " + right_speed + " Left: " + left_speed);
-      System.out.println("Gyro heading: " + heading + " turn: " + turn);
-      System.out.println(left_speed);
+      double turn =  1.5 * (-1.0/80.0) * heading_difference;
+      // FRMotor.set(ControlMode.PercentOutput, -(right_speed) );
+      // FLMotor.set(ControlMode.PercentOutput, left_speed);
+      
+      FRMotor.set(ControlMode.PercentOutput, -(right_speed + turn) );
+      FLMotor.set(ControlMode.PercentOutput, left_speed - turn);
+      // //System.out.println("Controller Position: " + right_speed + " Left: " + left_speed);
+      System.out.println("Gyro heading: " + heading + " Heading Diff: " + heading_difference);
+      //System.out.println(left_speed);
+      
     }
   }
   public void endPath() {
@@ -168,106 +184,7 @@ public class DriveSubsystem extends Subsystem {
   }
 
 //-----------------------------------------------------------------------------
-  public void PathInit()
-  {
-    startTime = System.currentTimeMillis();
-    index = 0;
-    reset();
-    FRMotor.configMotionCruiseVelocity(200, 0);
-		FLMotor.configMotionCruiseVelocity(200, 0);
-
-		FRMotor.configMotionAcceleration(100, 0);
-		FLMotor.configMotionAcceleration(100, 0);
-    //FLMotor.configMotionCruiseVelocity(sensorUnitsPer100ms)
-    //FRMotor.configMotionCruiseVelocity
-  }
-  public void reset(){
-    FRMotor.setSelectedSensorPosition(0, 0, 0);
-    FLMotor.setSelectedSensorPosition(0, 0, 0);
-    
-    FLMotor.set(ControlMode.PercentOutput, 0);
-    FRMotor.set(ControlMode.PercentOutput, 0);
-  }
-
-  public void MotionMagic() {
-    if(index<RightDrivePath.length) {
-      System.out.println("position: "+RightDrivePath[index].position);
-      FRMotor.set(ControlMode.MotionMagic, RightDrivePath[index].position);
-      FLMotor.set(ControlMode.MotionMagic, LeftDrivePath[index].position);
-      index++;
-    }
-  }
-  public boolean isDone(){
-    return (index>=RightDrivePath.length);
-  }
-
-  public void LeftLoadPath(String pathFile) throws IOException  {
-     java.io.File file = new java.io.File(pathFile);
-
-    if(file.exists() && file.isFile()) {
-      FileReader fileReader = new FileReader(pathFile);
-      BufferedReader bufferedReader = new BufferedReader(fileReader);
-      List<String> lines = new ArrayList<String>();
-      String line = null;
-      while ((line = bufferedReader.readLine()) != null) {
-          lines.add(line);
-      }
-      bufferedReader.close();
-      lines.remove(0);
-      String[] pathInfo = lines.toArray(new String[lines.size()]);
-      LeftDrivePath = new PathDatum[lines.size()];
-
-      int arrayIndex = 0;
-      for (String pathLine : pathInfo) {
-
-        PathDatum pt = new PathDatum();
-        pt.Init(pathLine);
-        LeftDrivePath[arrayIndex] = pt;
-
-        arrayIndex++;
-      }
-    } else{
-      System.out.println("--Left path file not found: " + pathFile);
-    }
-  }
-
-  public void RightLoadPath(String pathFile) throws IOException  {
-    //File file = new File(pathFile);
-
-     java.io.File file = new java.io.File(pathFile);
-
-     if(file.exists() && file.isFile()) {
-      FileReader fileReader = new FileReader(pathFile);
-      BufferedReader bufferedReader = new BufferedReader(fileReader);
-      List<String> lines = new ArrayList<String>();
-      String line = null;
-      while ((line = bufferedReader.readLine()) != null) {
-          lines.add(line);
-      }
-      bufferedReader.close();
-      lines.remove(0);
-      String[] pathInfo = lines.toArray(new String[lines.size()]);
-      RightDrivePath = new PathDatum[lines.size()];
-
-      int arrayIndex = 0;
-      for (String pathLine : pathInfo) {
-
-        PathDatum pt = new PathDatum();
-        pt.Init(pathLine);
-        RightDrivePath[arrayIndex] = pt;
-
-        arrayIndex++;
-      }
-    }else{
-      System.out.println("--Right path file not found: " + pathFile);
-    }
- }
-
- public void LoadPath(String leftPathFile, String rightPathFile) throws IOException {
-   LeftLoadPath(leftPathFile);
-   RightLoadPath(rightPathFile);
-
- }
+ 
 
  boolean bullyMode = true;
  public void switchDriveMode(){
