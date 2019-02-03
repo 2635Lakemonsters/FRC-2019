@@ -118,11 +118,11 @@ public class DriveSubsystem extends Subsystem {
 		}
   //---------EXPERIMENTAL PATH WEAVER CODE-----------
   
-
-  public void ExperimentalPathAutoInit() {
+  boolean swapped;
+  public void ExperimentalPathAutoInit(boolean swapped) {
     FRMotor.setSelectedSensorPosition(0, 0, 0);
     FLMotor.setSelectedSensorPosition(0, 0, 0);
-    
+    this.swapped = swapped;
     //System.out.println("Test Out");
     //File tmep = new File(Filesystem.getDeployDirectory(), "paths/" + "Straight.left" + ".pf1.csv");
     //File tmep = new File("/home/lvuser/deploy/paths/Straight.left.pf1.csv");
@@ -132,8 +132,16 @@ public class DriveSubsystem extends Subsystem {
    // Trajectory left_trajectory = PathfinderFRC.getTrajectory("Curved.right"); //change this depending on which side
     //Trajectory right_trajectory = PathfinderFRC.getTrajectory("Curved.left");
     //System.out.println("TestEnd");
-    Trajectory left_trajectory = PathfinderFRC.getTrajectory("Autonomous1.right"); //change this depending on which side
-    Trajectory right_trajectory = PathfinderFRC.getTrajectory("Autonomous1.left");
+    Trajectory left_trajectory;
+    Trajectory right_trajectory;
+    if(!swapped){
+      left_trajectory = PathfinderFRC.getTrajectory("Autonomous2.right"); //change this depending on which side
+      right_trajectory = PathfinderFRC.getTrajectory("Autonomous2.left");
+    }
+    else{
+      left_trajectory = PathfinderFRC.getTrajectory("Autonomous2R.left"); //change this depending on which side
+      right_trajectory = PathfinderFRC.getTrajectory("Autonomous2R.right");
+    }
     
     m_left_follower = new EncoderFollower(left_trajectory);
     m_right_follower = new EncoderFollower(right_trajectory);
@@ -162,14 +170,25 @@ public class DriveSubsystem extends Subsystem {
       double right_speed = m_right_follower.calculate(FRMotor.getSelectedSensorPosition(0));
       
       double heading = m_gyro.getAngle();
-      double desired_heading = Pathfinder.r2d(m_left_follower.getHeading());
+      double desired_heading;
+      if(!swapped){
+        desired_heading = Pathfinder.r2d(m_left_follower.getHeading());
+      }else{
+        desired_heading = Pathfinder.r2d(Math.abs(m_left_follower.getHeading()-Math.PI));
+        FRMotor.setSensorPhase(false);
+        FLMotor.setSensorPhase(true);
+      }
       double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
       double turn =  1.5 * (-1.0/80.0) * heading_difference;
       // FRMotor.set(ControlMode.PercentOutput, -(right_speed) );
       // FLMotor.set(ControlMode.PercentOutput, left_speed);
-      
+      if(!swapped){
       FRMotor.set(ControlMode.PercentOutput, -(right_speed + turn) );
       FLMotor.set(ControlMode.PercentOutput, left_speed - turn);
+      }else{
+        FRMotor.set(ControlMode.PercentOutput, (right_speed + turn) );
+      FLMotor.set(ControlMode.PercentOutput, -(left_speed - turn));
+      }
       // //System.out.println("Controller Position: " + right_speed + " Left: " + left_speed);
       System.out.println("Gyro heading: " + heading + " Heading Diff: " + heading_difference);
       //System.out.println(left_speed);

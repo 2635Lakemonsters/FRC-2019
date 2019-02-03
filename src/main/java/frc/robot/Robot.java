@@ -114,7 +114,7 @@ boolean autoHappened = false;
   public void autonomousInit() {
 
     //-------EXPERIMENTAL PATH WEAVER CODE-----------
-    driveSubsystem.ExperimentalPathAutoInit();
+    driveSubsystem.ExperimentalPathAutoInit(false);
     //---------------------------------------------
     
     //m_autonomousCommand = m_chooser.getSelected();
