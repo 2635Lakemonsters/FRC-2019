@@ -183,11 +183,11 @@ public class DriveSubsystem extends Subsystem {
       // FRMotor.set(ControlMode.PercentOutput, -(right_speed) );
       // FLMotor.set(ControlMode.PercentOutput, left_speed);
       if(!swapped){
-      FRMotor.set(ControlMode.PercentOutput, -(right_speed + turn) );
-      FLMotor.set(ControlMode.PercentOutput, left_speed - turn);
+        FRMotor.set(ControlMode.PercentOutput, -(right_speed + turn) );
+        FLMotor.set(ControlMode.PercentOutput, left_speed - turn);
       }else{
         FRMotor.set(ControlMode.PercentOutput, (right_speed + turn) );
-      FLMotor.set(ControlMode.PercentOutput, -(left_speed - turn));
+        FLMotor.set(ControlMode.PercentOutput, -(left_speed - turn));
       }
       // //System.out.println("Controller Position: " + right_speed + " Left: " + left_speed);
       System.out.println("Gyro heading: " + heading + " Heading Diff: " + heading_difference);

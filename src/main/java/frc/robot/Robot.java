@@ -39,6 +39,7 @@ public class Robot extends TimedRobot {
   public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
   public static OI oi;
   public static DriveSubsystem driveSubsystem;
+  public static Elevator elevator;
 
   SPathLeftCmd sPathLeftCmd;
   DriveCommand driveCommand;
@@ -55,6 +56,8 @@ public class Robot extends TimedRobot {
     
     oi = new OI();
     driveSubsystem = new DriveSubsystem();
+    elevator = new Elevator();
+
     sPathLeftCmd = new SPathLeftCmd();
     driveCommand = new DriveCommand();
     //m_chooser.setDefaultOption("Default Auto", new PathTestCommand());

@@ -30,8 +30,11 @@ public class RobotMap {
   public static int BACK_RIGHT_MOTOR_CHANNEL = 2;
   public static int FRONT_LEFT_MOTOR_CHANNEL = 3;
   public static int BACK_LEFT_MOTOR_CHANNEL = 4;
+  public static int SWITCH_MOTOR_CHANNEL = 7;
 
   public static int S_PATH_LEFT_BUTTON = 1;
+
+  public static int SWITCHER_VELOCITY = 10;
 
   //--------EXPERIMENTAL PATHWEAVER CONSTANTS------------
   public static final int k_ticks_per_rev = 4096/3;
@@ -48,6 +51,20 @@ public class RobotMap {
   // public static final int k_right_encoder_port_b = 3;
 
   public static final int k_gyro_port = 0;
+
+  /* Elevator Values */
+  public static final int ELEVATOR_TOLERANCE = 2000;
+  public static final int ELEVATOR_UPPER_MOTOR_CHANNEL = 0;
+  public static final int ELEVATOR_LOWER_MOTOR1_CHANNEL = 0;
+  public static final int SMALL_ELEVATOR_MAX = 20000;
+  public static final int ELEVATOR_ACCELERATION = 5000;
+  public static final int ELEVATOR_VELOCITY = 3000;
+  public static final int ELEVATOR_GROUND_LOWER_HEIGHT = 0;
+  public static final int ELEVATOR_EXCHANGE_LOWER_HEIGHT = 0;
+  public static final int ELEVATOR_STACK_LOWER_HEIGHT = 0;
+  public static final int ELEVATOR_SWITCH_LOWER_HEIGHT = 0;
+  public static final int ELEVATOR_SCALE_LOWER_HEIGHT = 0;
+  public static final int ELEVATOR_CLIMB_LOWER_HEIGHT = 0;
 
   //public static final String k_path_name = "example";
   //------------------------------------------------------
