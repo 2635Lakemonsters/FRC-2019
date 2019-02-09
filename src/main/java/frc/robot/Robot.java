@@ -40,9 +40,12 @@ public class Robot extends TimedRobot {
   public static OI oi;
   public static DriveSubsystem driveSubsystem;
   public static Elevator elevator;
+  public static Flower flower;
 
   SPathLeftCmd sPathLeftCmd;
   DriveCommand driveCommand;
+  ToggleFlowerExtendCommand extenderCommand;
+  ToggleFlowerCommand flowerCommand;
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -57,13 +60,18 @@ public class Robot extends TimedRobot {
     oi = new OI();
     driveSubsystem = new DriveSubsystem();
     elevator = new Elevator();
+    flower = new Flower();
 
     sPathLeftCmd = new SPathLeftCmd();
     driveCommand = new DriveCommand();
+    extenderCommand = new ToggleFlowerExtendCommand();
     //m_chooser.setDefaultOption("Default Auto", new PathTestCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
     oi.sPathButton.whenPressed(sPathLeftCmd);
+    oi.grabberExtendButton.whenPressed(extenderCommand);
+    oi.flowerButtonL.whenPressed(flowerCommand);
+    oi.flowerButtonR.whenPressed(flowerCommand);
   }
 
   /**
@@ -173,6 +181,7 @@ boolean autoHappened = false;
     }
     driveSubsystem.bullyOff();
     boolistatus = false;
+
   }
 
   /**
@@ -182,6 +191,7 @@ boolean autoHappened = false;
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
     
+    //System.out.println("Right: " + driveSubsystem.FLMotor.getSelectedSensorPosition(0));
 
     if(oi.leftJoy.getRawButton(3) && boolistatus == false){
       driveSubsystem.switchDriveMode();

@@ -81,8 +81,10 @@ public class DriveSubsystem extends Subsystem {
     FLMotor = new WPI_TalonSRX(RobotMap.FRONT_LEFT_MOTOR_CHANNEL);
     BLMotor = new WPI_TalonSRX(RobotMap.BACK_LEFT_MOTOR_CHANNEL);
 
-    FRMotor.setSensorPhase(true);
-    FLMotor.setSensorPhase(false);
+    FRMotor.setSensorPhase(false);
+    FLMotor.setSensorPhase(true);
+
+    //2018 Bot = Right:true   Left:false
 
     gearBoxSolenoid = new Solenoid(7);
 
@@ -112,8 +114,8 @@ public class DriveSubsystem extends Subsystem {
 		double absright = Math.abs(right);
 		if(absleft<0.05) left = 0;
     if(absright<0.05) right = 0;
-    FRMotor.set(right);
-    FLMotor.set(-left);
+    FRMotor.set(-right);
+    FLMotor.set(left);
 			
 		}
   //---------EXPERIMENTAL PATH WEAVER CODE-----------
@@ -135,8 +137,8 @@ public class DriveSubsystem extends Subsystem {
     Trajectory left_trajectory;
     Trajectory right_trajectory;
     if(!swapped){
-      left_trajectory = PathfinderFRC.getTrajectory("Autonomous2.right"); //change this depending on which side
-      right_trajectory = PathfinderFRC.getTrajectory("Autonomous2.left");
+      left_trajectory = PathfinderFRC.getTrajectory("DriveStraight.right"); //change this depending on which side
+      right_trajectory = PathfinderFRC.getTrajectory("DriveStraight.left");
     }
     else{
       left_trajectory = PathfinderFRC.getTrajectory("Autonomous2R.left"); //change this depending on which side
@@ -159,7 +161,7 @@ public class DriveSubsystem extends Subsystem {
     
     m_follower_notifier = new Notifier(this::followPath);
     m_follower_notifier.startPeriodic(left_trajectory.get(0).dt);
-    System.out.println("Dt: " + left_trajectory.get(0).dt);
+    //System.out.println("Dt: " + left_trajectory.get(0).dt);
   }
 
   public void followPath() {
@@ -179,16 +181,18 @@ public class DriveSubsystem extends Subsystem {
         FLMotor.setSensorPhase(true);
       }
       double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
-      double turn =  1.5 * (-1.0/80.0) * heading_difference;
+      //double turn =  1.5 * (-1.0/80.0) * heading_difference;
+      double turn =  0.02 * heading_difference;
       // FRMotor.set(ControlMode.PercentOutput, -(right_speed) );
       // FLMotor.set(ControlMode.PercentOutput, left_speed);
-      if(!swapped){
-        FRMotor.set(ControlMode.PercentOutput, -(right_speed + turn) );
-        FLMotor.set(ControlMode.PercentOutput, left_speed - turn);
-      }else{
-        FRMotor.set(ControlMode.PercentOutput, (right_speed + turn) );
-        FLMotor.set(ControlMode.PercentOutput, -(left_speed - turn));
-      }
+      // if(!swapped){
+         //FRMotor.set(ControlMode.PercentOutput, -(right_speed + turn) );
+         //FLMotor.set(ControlMode.PercentOutput, left_speed - turn);
+         tankDrive(left_speed - turn, (right_speed + turn));
+      // }else{
+      //   FRMotor.set(ControlMode.PercentOutput, (right_speed + turn) );
+      //   FLMotor.set(ControlMode.PercentOutput, -(left_speed - turn));
+      // }
       // //System.out.println("Controller Position: " + right_speed + " Left: " + left_speed);
       System.out.println("Gyro heading: " + heading + " Heading Diff: " + heading_difference);
       //System.out.println(left_speed);
@@ -198,8 +202,9 @@ public class DriveSubsystem extends Subsystem {
   public void endPath() {
     
     m_follower_notifier.stop();
-    FRMotor.set(0);
-    FLMotor.set(0);
+    tankDrive(0.0,0.0);
+    //FRMotor.set(0);
+    //FLMotor.set(0);
   }
 
 //-----------------------------------------------------------------------------

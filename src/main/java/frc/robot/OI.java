@@ -46,5 +46,9 @@ public class OI {
   public Joystick leftJoy = new Joystick(RobotMap.LEFT_JOYSTICK_CHANNEL);
   public Joystick rightJoy = new Joystick(RobotMap.RIGHT_JOYSTICK_CHANNEL);
   public Button sPathButton = new JoystickButton(leftJoy, RobotMap.S_PATH_LEFT_BUTTON);
+
+  public Button grabberExtendButton = new JoystickButton(leftJoy, RobotMap.EXTENDER_BUTTON);
+  public Button flowerButtonL = new JoystickButton(leftJoy, RobotMap.LEFT_FLOWER_BUTTON);
+  public Button flowerButtonR = new JoystickButton(leftJoy, RobotMap.RIGHT_FLOWER_BUTTON);
   
 }

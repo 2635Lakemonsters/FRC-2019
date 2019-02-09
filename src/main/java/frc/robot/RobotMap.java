@@ -32,12 +32,15 @@ public class RobotMap {
   public static int BACK_LEFT_MOTOR_CHANNEL = 4;
   public static int SWITCH_MOTOR_CHANNEL = 7;
 
-  public static int S_PATH_LEFT_BUTTON = 1;
+  public static int S_PATH_LEFT_BUTTON = 2;
+  public static int EXTENDER_BUTTON = 3;
+  public static int LEFT_FLOWER_BUTTON = 1;
+  public static int RIGHT_FLOWER_BUTTON = 1;
 
   public static int SWITCHER_VELOCITY = 10;
 
   //--------EXPERIMENTAL PATHWEAVER CONSTANTS------------
-  public static final int k_ticks_per_rev = 4096/3;
+  public static final int k_ticks_per_rev = 4096/*/3*/;//2018 Comp Bot
   public static final double k_wheel_diameter = 0.49; //feet!
   public static final double k_max_velocity = 10.0;
 
