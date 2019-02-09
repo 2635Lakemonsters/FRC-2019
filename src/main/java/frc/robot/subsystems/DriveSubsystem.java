@@ -188,7 +188,7 @@ public class DriveSubsystem extends Subsystem {
       // if(!swapped){
          //FRMotor.set(ControlMode.PercentOutput, -(right_speed + turn) );
          //FLMotor.set(ControlMode.PercentOutput, left_speed - turn);
-         tankDrive(left_speed - turn, (right_speed + turn));
+         tankDrive(left_speed + turn, (right_speed - turn));
       // }else{
       //   FRMotor.set(ControlMode.PercentOutput, (right_speed + turn) );
       //   FLMotor.set(ControlMode.PercentOutput, -(left_speed - turn));
