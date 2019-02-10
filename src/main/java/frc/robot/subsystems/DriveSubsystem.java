@@ -48,6 +48,7 @@ public class DriveSubsystem extends Subsystem {
   WPI_TalonSRX BRMotor;
   public WPI_TalonSRX FLMotor;
   WPI_TalonSRX BLMotor;
+  public boolean isReversed = false;
 
   public long startTime;
   int  index;
@@ -85,6 +86,7 @@ public class DriveSubsystem extends Subsystem {
     FLMotor.setSensorPhase(true);
 
     //2018 Bot = Right:true   Left:false
+    
 
     gearBoxSolenoid = new Solenoid(7);
 
@@ -101,6 +103,24 @@ public class DriveSubsystem extends Subsystem {
     //-------------------------------------------
   }
 
+  public void setReverse(boolean isReversed) {
+      this.isReversed = isReversed;
+      if(isReversed) {
+
+  
+        FRMotor.setSensorPhase(true);
+        FLMotor.setSensorPhase(false);
+      } else {
+        FRMotor.setSensorPhase(false);
+        FLMotor.setSensorPhase(true);
+      }
+
+  }
+
+  public boolean getReverse() {
+    return isReversed;
+  }
+
   public double leftValue;
   public double rightValue;
 
@@ -110,21 +130,29 @@ public class DriveSubsystem extends Subsystem {
   // }
 
   public void tankDrive(double left, double right) {
+    double tempLeft;
 		double absleft = Math.abs(left);
 		double absright = Math.abs(right);
 		if(absleft<0.05) left = 0;
     if(absright<0.05) right = 0;
+    if(getReverse()) {
+      tempLeft = right;
+      right = -left;
+      left = -tempLeft;
+    } 
     FRMotor.set(-right);
     FLMotor.set(left);
+    //System.out.println("Left: " + FLMotor.getSelectedSensorPosition());
+    //System.out.println("Right: " + FRMotor.getSelectedSensorPosition());
 			
 		}
   //---------EXPERIMENTAL PATH WEAVER CODE-----------
   
-  boolean swapped;
-  public void ExperimentalPathAutoInit(boolean swapped) {
+  
+  public void PathAutoInit() {
     FRMotor.setSelectedSensorPosition(0, 0, 0);
     FLMotor.setSelectedSensorPosition(0, 0, 0);
-    this.swapped = swapped;
+    
     //System.out.println("Test Out");
     //File tmep = new File(Filesystem.getDeployDirectory(), "paths/" + "Straight.left" + ".pf1.csv");
     //File tmep = new File("/home/lvuser/deploy/paths/Straight.left.pf1.csv");
@@ -136,14 +164,11 @@ public class DriveSubsystem extends Subsystem {
     //System.out.println("TestEnd");
     Trajectory left_trajectory;
     Trajectory right_trajectory;
-    if(!swapped){
-      left_trajectory = PathfinderFRC.getTrajectory("DriveStraight.right"); //change this depending on which side
-      right_trajectory = PathfinderFRC.getTrajectory("DriveStraight.left");
-    }
-    else{
-      left_trajectory = PathfinderFRC.getTrajectory("Autonomous2R.left"); //change this depending on which side
-      right_trajectory = PathfinderFRC.getTrajectory("Autonomous2R.right");
-    }
+    
+    left_trajectory = PathfinderFRC.getTrajectory("DriveStraight.right"); //change this depending on which side
+    right_trajectory = PathfinderFRC.getTrajectory("DriveStraight.left");
+    
+   
     
     m_left_follower = new EncoderFollower(left_trajectory);
     m_right_follower = new EncoderFollower(right_trajectory);
@@ -171,15 +196,12 @@ public class DriveSubsystem extends Subsystem {
       double left_speed = m_left_follower.calculate(FLMotor.getSelectedSensorPosition(0));
       double right_speed = m_right_follower.calculate(FRMotor.getSelectedSensorPosition(0));
       
-      double heading = m_gyro.getAngle();
+      //double heading = m_gyro.getAngle();
+      double heading = getGyroAngle();
       double desired_heading;
-      if(!swapped){
-        desired_heading = Pathfinder.r2d(m_left_follower.getHeading());
-      }else{
-        desired_heading = Pathfinder.r2d(Math.abs(m_left_follower.getHeading()-Math.PI));
-        FRMotor.setSensorPhase(false);
-        FLMotor.setSensorPhase(true);
-      }
+      
+      desired_heading = Pathfinder.r2d(m_left_follower.getHeading());
+      
       double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
       //double turn =  1.5 * (-1.0/80.0) * heading_difference;
       double turn =  0.02 * heading_difference;
@@ -194,11 +216,20 @@ public class DriveSubsystem extends Subsystem {
       //   FLMotor.set(ControlMode.PercentOutput, -(left_speed - turn));
       // }
       // //System.out.println("Controller Position: " + right_speed + " Left: " + left_speed);
-      System.out.println("Gyro heading: " + heading + " Heading Diff: " + heading_difference);
+      //System.out.println("Gyro heading: " + heading + " Heading Diff: " + heading_difference);
       //System.out.println(left_speed);
       
     }
   }
+  public double getGyroAngle() {
+    double angle = m_gyro.getAngle();
+    // if(isReversed) {
+    //   angle = -angle;
+    // }
+    return angle;
+  }
+
+  
   public void endPath() {
     
     m_follower_notifier.stop();

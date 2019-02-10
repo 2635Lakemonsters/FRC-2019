@@ -50,5 +50,7 @@ public class OI {
   public Button grabberExtendButton = new JoystickButton(leftJoy, RobotMap.EXTENDER_BUTTON);
   public Button flowerButtonL = new JoystickButton(leftJoy, RobotMap.LEFT_FLOWER_BUTTON);
   public Button flowerButtonR = new JoystickButton(leftJoy, RobotMap.RIGHT_FLOWER_BUTTON);
+  public Button reverseButton = new JoystickButton(rightJoy, RobotMap.REVERSE_BUTTON);
+  public Button encoderResetButton = new JoystickButton(rightJoy, RobotMap.ENCODER_RESET_BUTTON);
   
 }

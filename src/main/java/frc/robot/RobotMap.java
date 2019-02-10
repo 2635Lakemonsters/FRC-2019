@@ -36,6 +36,8 @@ public class RobotMap {
   public static int EXTENDER_BUTTON = 3;
   public static int LEFT_FLOWER_BUTTON = 1;
   public static int RIGHT_FLOWER_BUTTON = 1;
+  public static int REVERSE_BUTTON = 2;
+  public static int ENCODER_RESET_BUTTON = 6;
 
   public static int SWITCHER_VELOCITY = 10;
 

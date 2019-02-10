@@ -41,11 +41,14 @@ public class Robot extends TimedRobot {
   public static DriveSubsystem driveSubsystem;
   public static Elevator elevator;
   public static Flower flower;
+  
 
   SPathLeftCmd sPathLeftCmd;
   DriveCommand driveCommand;
   ToggleFlowerExtendCommand extenderCommand;
   ToggleFlowerCommand flowerCommand;
+  ReverseCommand reverseCommand;
+  EncoderResetCommand encoderResetCommand;
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -65,6 +68,8 @@ public class Robot extends TimedRobot {
     sPathLeftCmd = new SPathLeftCmd();
     driveCommand = new DriveCommand();
     extenderCommand = new ToggleFlowerExtendCommand();
+    reverseCommand = new ReverseCommand();
+    encoderResetCommand = new EncoderResetCommand(5);
     //m_chooser.setDefaultOption("Default Auto", new PathTestCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
@@ -72,6 +77,8 @@ public class Robot extends TimedRobot {
     oi.grabberExtendButton.whenPressed(extenderCommand);
     oi.flowerButtonL.whenPressed(flowerCommand);
     oi.flowerButtonR.whenPressed(flowerCommand);
+    oi.reverseButton.whenPressed(reverseCommand);
+    oi.encoderResetButton.whenPressed(encoderResetCommand);
   }
 
   /**
@@ -125,7 +132,7 @@ boolean autoHappened = false;
   public void autonomousInit() {
 
     //-------EXPERIMENTAL PATH WEAVER CODE-----------
-    driveSubsystem.ExperimentalPathAutoInit(false);
+    driveSubsystem.PathAutoInit();
     //---------------------------------------------
     
     //m_autonomousCommand = m_chooser.getSelected();
@@ -166,10 +173,10 @@ boolean autoHappened = false;
 		}
     
     //-------EXPERIMENTAL PATH WEAVER CODE-----------
-    if(autoHappened){
-      driveSubsystem.endPath();
-      autoHappened = false;
-    }
+    // if(autoHappened){
+    //   driveSubsystem.endPath();
+    //   autoHappened = false;
+    // }
     //--------------------------------------------
 
     // This makes sure that the autonomous stops running when
@@ -201,6 +208,8 @@ boolean autoHappened = false;
     }
     //System.out.println("Left Position: " + driveSubsystem.FLMotor.getSelectedSensorPosition(0));
     //System.out.println("Right Position: " + driveSubsystem.FRMotor.getSelectedSensorPosition(0));
+
+    //System.out.println("Front Right Motor Current: " + driveSubsystem.FRMotor.getOutputCurrent());
   }
 
   /**
