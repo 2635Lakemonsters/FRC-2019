@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
   public static DriveSubsystem driveSubsystem;
   public static Elevator elevator;
   public static Flower flower;
-  
+  public static Switcher switcher;
 
   SPathLeftCmd sPathLeftCmd;
   DriveCommand driveCommand;
@@ -49,6 +49,8 @@ public class Robot extends TimedRobot {
   ToggleFlowerCommand flowerCommand;
   ReverseCommand reverseCommand;
   EncoderResetCommand encoderResetCommand;
+  SwitcherCommand switcherCommand;
+  SwitcherEncoderResetCommand switcherEncoderResetCommand;
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -64,12 +66,16 @@ public class Robot extends TimedRobot {
     driveSubsystem = new DriveSubsystem();
     elevator = new Elevator();
     flower = new Flower();
+    switcher = new Switcher();
 
     sPathLeftCmd = new SPathLeftCmd();
     driveCommand = new DriveCommand();
     extenderCommand = new ToggleFlowerExtendCommand();
     reverseCommand = new ReverseCommand();
     encoderResetCommand = new EncoderResetCommand(5);
+    switcherCommand = new SwitcherCommand();
+    switcherEncoderResetCommand = new SwitcherEncoderResetCommand(5);
+
     //m_chooser.setDefaultOption("Default Auto", new PathTestCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
@@ -79,6 +85,7 @@ public class Robot extends TimedRobot {
     oi.flowerButtonR.whenPressed(flowerCommand);
     oi.reverseButton.whenPressed(reverseCommand);
     oi.encoderResetButton.whenPressed(encoderResetCommand);
+    oi.switcherButton.toggleWhenPressed(switcherCommand);
   }
 
   /**
@@ -132,7 +139,9 @@ boolean autoHappened = false;
   public void autonomousInit() {
 
     //-------EXPERIMENTAL PATH WEAVER CODE-----------
-    driveSubsystem.PathAutoInit();
+    switcherEncoderResetCommand.start();
+
+  //  driveSubsystem.PathAutoInit();
     //---------------------------------------------
     
     //m_autonomousCommand = m_chooser.getSelected();
@@ -167,7 +176,8 @@ boolean autoHappened = false;
   boolean boolistatus;
   @Override
   public void teleopInit() {
-    
+    switcherEncoderResetCommand.start();   //remove for real competitions
+
 		if (driveCommand != null) {
 			driveCommand.start();
 		}
@@ -199,6 +209,7 @@ boolean autoHappened = false;
     Scheduler.getInstance().run();
     
     //System.out.println("Right: " + driveSubsystem.FLMotor.getSelectedSensorPosition(0));
+    
 
     if(oi.leftJoy.getRawButton(3) && boolistatus == false){
       driveSubsystem.switchDriveMode();

@@ -21,20 +21,32 @@ import frc.robot.RobotMap;
  */
 public class Switcher extends Subsystem {
   // Put methods for controlling this subsystem
-  CANSparkMax switchMotor;
-  CANPIDController controller;
+  public CANSparkMax switchMotor;
+  public CANPIDController controller;
+  CANEncoder encoder;
+  Position currentPosition;
+  double initialEncoderPosition;
 
   public Switcher() {
     switchMotor = new CANSparkMax(RobotMap.SWITCH_MOTOR_CHANNEL, MotorType.kBrushless);
     controller = new CANPIDController(switchMotor);
-
+    encoder = new CANEncoder(switchMotor);
+    encoderStart();
   }
   public void encoderStart() {
-    controller.setReference(2000, ControlType.kPosition);
     controller.setP(1.0);
     controller.setI(0.0);
     controller.setD(0.0);
     controller.setFF(0.0);
+  }
+
+  public void encoderReset() {
+    this.initialEncoderPosition = encoder.getPosition();
+  }
+
+  public void moveSwitch(Position setPoint) {
+    controller.setReference(setPoint.position+initialEncoderPosition, ControlType.kPosition);
+    this.currentPosition = setPoint;
   }
   
   @Override
@@ -42,4 +54,16 @@ public class Switcher extends Subsystem {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
   }
+
+  public static enum Position {
+    CARGO(RobotMap.SWITCHER_CARGO),
+    HATCH(RobotMap.SWITCHER_HATCH),
+    REAR(RobotMap.SWITCHER_REAR);
+
+    public double position;
+    private Position(double position) {
+      this.position = position;
+    }
+  }
 }
+

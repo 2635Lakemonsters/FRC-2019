@@ -38,8 +38,7 @@ public class RobotMap {
   public static int RIGHT_FLOWER_BUTTON = 1;
   public static int REVERSE_BUTTON = 2;
   public static int ENCODER_RESET_BUTTON = 6;
-
-  public static int SWITCHER_VELOCITY = 10;
+  public static int SWITCHER_BUTTON = 5;
 
   //--------EXPERIMENTAL PATHWEAVER CONSTANTS------------
   public static final int k_ticks_per_rev = 4096/*/3*/;//2018 Comp Bot
@@ -73,5 +72,8 @@ public class RobotMap {
 
   //public static final String k_path_name = "example";
   //------------------------------------------------------
+  public static final int SWITCHER_CARGO = 100;
+  public static final int SWITCHER_HATCH = 200;
+  public static final int SWITCHER_REAR = 300;
   
 }
