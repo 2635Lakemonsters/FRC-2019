@@ -39,7 +39,7 @@ public class SwitcherEncoderResetCommand extends TimedCommand {
       System.out.println("switch reset execute");
 
       elapsedTimeCount = elapsedTimeCount + 1;
-      Robot.switcher.switchMotor.set(-0.2);
+      Robot.switcher.switchMotor.set(-0.1);
       System.out.println("current:" + Robot.switcher.switchMotor.getOutputCurrent());
 
       // ignore initial motor current by delaying for elapsedTimeCount

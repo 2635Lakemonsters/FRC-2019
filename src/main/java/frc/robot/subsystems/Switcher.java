@@ -24,7 +24,7 @@ public class Switcher extends Subsystem {
   public CANSparkMax switchMotor;
   public CANPIDController controller;
   CANEncoder encoder;
-  Position currentPosition;
+  public Position currentPosition;
   double initialEncoderPosition;
 
   public Switcher() {
@@ -32,6 +32,7 @@ public class Switcher extends Subsystem {
     controller = new CANPIDController(switchMotor);
     encoder = new CANEncoder(switchMotor);
     encoderStart();
+    //switchMotor.setParameter(ConfigParameter.kEncoderSampleDelta, 0);
   }
   public void encoderStart() {
     controller.setP(1.0);
@@ -42,9 +43,14 @@ public class Switcher extends Subsystem {
 
   public void encoderReset() {
     this.initialEncoderPosition = encoder.getPosition();
+    this.currentPosition = Position.FLOOR;
   }
 
   public void moveSwitch(Position setPoint) {
+    //PLACE LOGIC HEAR FOR WHEN ABLE TO GO TO WHAT STATE?!
+    //if elevator at top, may go to rear
+    //if elevator at bottom, may not change state
+    //Probably only go to floor level if elevator at bottom
     controller.setReference(setPoint.position+initialEncoderPosition, ControlType.kPosition);
     this.currentPosition = setPoint;
   }
@@ -56,13 +62,46 @@ public class Switcher extends Subsystem {
   }
 
   public static enum Position {
+    FLOOR(RobotMap.SWITCHER_FLOOR),
     CARGO(RobotMap.SWITCHER_CARGO),
     HATCH(RobotMap.SWITCHER_HATCH),
     REAR(RobotMap.SWITCHER_REAR);
+    
 
     public double position;
     private Position(double position) {
       this.position = position;
+    }
+  }
+
+  public Position getNextPosition(){
+    switch(currentPosition){
+      case FLOOR:
+        return Position.CARGO;
+      case CARGO:
+        return Position.HATCH;
+      case HATCH:
+        return Position.REAR;
+      case REAR:
+        return Position.REAR;
+      default:
+        return Position.FLOOR;
+
+    }
+  }
+
+  public Position getPrevPosition(){
+    switch(currentPosition){
+      case FLOOR:
+        return Position.FLOOR;
+      case CARGO:
+        return Position.FLOOR;
+      case HATCH:
+        return Position.CARGO;
+      case REAR:
+        return Position.HATCH;
+      default:
+        return Position.FLOOR;
     }
   }
 }

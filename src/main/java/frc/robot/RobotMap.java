@@ -72,6 +72,7 @@ public class RobotMap {
 
   //public static final String k_path_name = "example";
   //------------------------------------------------------
+  public static final int SWITCHER_FLOOR = 0;
   public static final int SWITCHER_CARGO = 100;
   public static final int SWITCHER_HATCH = 200;
   public static final int SWITCHER_REAR = 300;
