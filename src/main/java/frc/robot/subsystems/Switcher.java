@@ -32,6 +32,7 @@ public class Switcher extends Subsystem {
     controller = new CANPIDController(switchMotor);
     encoder = new CANEncoder(switchMotor);
     encoderStart();
+    //Does this effectively reset the encoder???
     //switchMotor.setParameter(ConfigParameter.kEncoderSampleDelta, 0);
   }
   public void encoderStart() {
@@ -66,7 +67,6 @@ public class Switcher extends Subsystem {
     CARGO(RobotMap.SWITCHER_CARGO),
     HATCH(RobotMap.SWITCHER_HATCH),
     REAR(RobotMap.SWITCHER_REAR);
-    
 
     public double position;
     private Position(double position) {
@@ -86,7 +86,6 @@ public class Switcher extends Subsystem {
         return Position.REAR;
       default:
         return Position.FLOOR;
-
     }
   }
 
