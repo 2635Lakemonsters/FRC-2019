@@ -23,6 +23,7 @@ public class SwitcherUpCommand extends Command {
   @Override
   protected void initialize() {
     //Robot.switcher.moveSwitch(Switcher.Position.CARGO);
+    System.out.println("switcherupcommand init");
     Robot.switcher.moveSwitch(Robot.switcher.getNextPosition());
   }
 

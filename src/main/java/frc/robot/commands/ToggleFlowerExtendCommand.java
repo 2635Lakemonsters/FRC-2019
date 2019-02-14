@@ -7,11 +7,12 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.TimedCommand;
 import frc.robot.Robot;
 
-public class ToggleFlowerExtendCommand extends Command {
-  public ToggleFlowerExtendCommand() {
+public class ToggleFlowerExtendCommand extends TimedCommand {
+  public ToggleFlowerExtendCommand(timeout) {
+    super(timeout);
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }

@@ -37,6 +37,7 @@ public class Robot extends TimedRobot {
   ReverseCommand reverseCommand;
   EncoderResetCommand encoderResetCommand;
   SwitcherUpCommand switcherUpCommand;
+  SwitcherDownCommand switcherDownCommand;
   SwitcherEncoderResetCommand switcherEncoderResetCommand;
 
   Command m_autonomousCommand;
@@ -61,6 +62,7 @@ public class Robot extends TimedRobot {
     reverseCommand = new ReverseCommand();
     encoderResetCommand = new EncoderResetCommand(5);
     switcherUpCommand = new SwitcherUpCommand();
+    switcherDownCommand = new SwitcherDownCommand();
     switcherEncoderResetCommand = new SwitcherEncoderResetCommand(5);
 
     //m_chooser.setDefaultOption("Default Auto", new PathTestCommand());
@@ -72,7 +74,8 @@ public class Robot extends TimedRobot {
     oi.flowerButtonR.whenPressed(flowerCommand);
     oi.reverseButton.whenPressed(reverseCommand);
     oi.encoderResetButton.whenPressed(encoderResetCommand);
-    oi.switcherButton.whenPressed(switcherUpCommand);
+    oi.switcherUpButton.whenPressed(switcherUpCommand);
+    oi.switcherDownButton.whenPressed(switcherDownCommand);
     
   }
 

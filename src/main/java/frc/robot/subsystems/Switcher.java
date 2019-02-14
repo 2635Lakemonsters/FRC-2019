@@ -26,6 +26,7 @@ public class Switcher extends Subsystem {
   CANEncoder encoder;
   public Position currentPosition;
   double initialEncoderPosition;
+  double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
 
   public Switcher() {
     switchMotor = new CANSparkMax(RobotMap.SWITCH_MOTOR_CHANNEL, MotorType.kBrushless);
@@ -36,14 +37,30 @@ public class Switcher extends Subsystem {
     //switchMotor.setParameter(ConfigParameter.kEncoderSampleDelta, 0);
   }
   public void encoderStart() {
-    controller.setP(1.0);
-    controller.setI(0.0);
-    controller.setD(0.0);
-    controller.setFF(0.0);
+    
+    // PID coefficients
+     kP = 0.1; 
+     //kI = 1e-4;
+     //kD = 1; 
+     kI = 0.0;
+     kD = 0.0; 
+     kIz = 0; 
+     kFF = 0; 
+     kMaxOutput = 1; 
+     kMinOutput = -1;
+     // set PID coefficients
+    controller.setP(kP);
+    controller.setI(kI);
+    controller.setD(kD);
+    controller.setIZone(kIz);
+    controller.setFF(kFF);
+    controller.setOutputRange(kMinOutput, kMaxOutput);
+
   }
 
   public void encoderReset() {
     this.initialEncoderPosition = encoder.getPosition();
+    System.out.println("Switcher intitial encoder position: " + initialEncoderPosition);
     this.currentPosition = Position.FLOOR;
   }
 
@@ -52,7 +69,10 @@ public class Switcher extends Subsystem {
     //if elevator at top, may go to rear
     //if elevator at bottom, may not change state
     //Probably only go to floor level if elevator at bottom
+    System.out.println("Switcher.moveSwitch");
     controller.setReference(setPoint.position+initialEncoderPosition, ControlType.kPosition);
+   
+
     this.currentPosition = setPoint;
   }
   
@@ -75,6 +95,7 @@ public class Switcher extends Subsystem {
   }
 
   public Position getNextPosition(){
+    System.out.println("Switcher.getNextPosition");
     switch(currentPosition){
       case FLOOR:
         return Position.CARGO;
