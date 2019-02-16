@@ -24,7 +24,7 @@ public class ElevatorUpCommand extends Command {
     protected void execute() {
     	Height newTargetHeight = Robot.elevator.getUpperHeight();
 		Robot.elevator.setTargetHeight(newTargetHeight);
-    	System.out.println();
+    	//System.out.println(newTargetHeight.toString());
     }
 
     // Make this return true when this Command no longer needs to run execute()

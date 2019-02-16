@@ -24,7 +24,7 @@ public class SwitcherUpCommand extends Command {
   protected void initialize() {
     //Robot.switcher.moveSwitch(Switcher.Position.CARGO);
     Position nextPosition = Robot.switcher.getNextPosition();
-    System.out.println("switcherupcommand init");
+    //System.out.println("switcherupcommand init");
     Robot.switcher.moveSwitch(nextPosition);
     if(nextPosition == Position.HATCH){
       Robot.elevator.setTargetHeight(Robot.elevator.getSwappedState());

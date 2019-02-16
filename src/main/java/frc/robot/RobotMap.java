@@ -32,14 +32,18 @@ public class RobotMap {
   public static int BACK_LEFT_MOTOR_CHANNEL = 4;
   public static int SWITCH_MOTOR_CHANNEL = 7;
 
-  public static int S_PATH_LEFT_BUTTON = 2;
+  public static int S_PATH_LEFT_BUTTON = 8;
   public static int EXTENDER_BUTTON = 3;
-  public static int LEFT_FLOWER_BUTTON = 1;
-  public static int RIGHT_FLOWER_BUTTON = 1;
+  //public static int LEFT_FLOWER_BUTTON = 1;
+  //public static int RIGHT_FLOWER_BUTTON = 1;
   public static int REVERSE_BUTTON = 2;
   public static int ENCODER_RESET_BUTTON = 6;
   public static int SWITCHER_UP_BUTTON = 5;
   public static int SWITCHER_DOWN_BUTTON = 4;
+  public static int GAME_TOOL_INCREMENT_BUTTON = 5;
+  public static int GAME_TOOL_DECREMENT_BUTTON = 4;
+  public static int GAME_TOOL_SWAP_BUTTON = 2;
+  public static int GAME_TOOL_FLOWER_BUTTON = 1;
 
   //--------EXPERIMENTAL PATHWEAVER CONSTANTS------------
   public static final int k_ticks_per_rev = 4096/*/3*/;//2018 Comp Bot

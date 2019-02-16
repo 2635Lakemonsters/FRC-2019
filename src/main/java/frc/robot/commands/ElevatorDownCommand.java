@@ -24,7 +24,7 @@ public class ElevatorDownCommand extends Command {
     protected void execute() {
     	Height newTargetHeight = Robot.elevator.getLowerHeight();
 		Robot.elevator.setTargetHeight(newTargetHeight);
-    	System.out.println();
+    	System.out.println(newTargetHeight);
     }
 
     // Make this return true when this Command no longer needs to run execute()

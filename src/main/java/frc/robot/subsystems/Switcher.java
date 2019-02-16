@@ -34,6 +34,7 @@ public class Switcher extends Subsystem {
     switchMotor = new CANSparkMax(RobotMap.SWITCH_MOTOR_CHANNEL, MotorType.kBrushless);
     controller = new CANPIDController(switchMotor);
     encoder = new CANEncoder(switchMotor);
+    currentPosition = Position.FLOOR;
     encoderStart();
     //Does this effectively reset the encoder???
     //switchMotor.setParameter(ConfigParameter.kEncoderSampleDelta, 0);
@@ -72,22 +73,24 @@ public class Switcher extends Subsystem {
     //if elevator at bottom, may not change state
     //Probably only go to floor level if elevator at bottom
     System.out.println("Switcher.moveSwitch");
-    if(Robot.elevator.currentTargetHeight == Height.GROUND){
-      if((setPoint == Position.FLOOR && currentPosition == Position.CARGO) || (setPoint == Position.CARGO && currentPosition == Position.FLOOR)){
-        controller.setReference(setPoint.position+initialEncoderPosition, ControlType.kPosition);
-        this.currentPosition = setPoint;
-      }
-    }else if(setPoint == Position.REAR){
-      if(Robot.elevator.currentTargetHeight == Height.LEVEL3H){
-        controller.setReference(setPoint.position+initialEncoderPosition, ControlType.kPosition);
-        this.currentPosition = setPoint;
-      }
-    }else if(Robot.elevator.currentTargetHeight == Height.GROUND){
-      System.out.println("Tried to move elevator in bottom state");
-    } else{
-      controller.setReference(setPoint.position+initialEncoderPosition, ControlType.kPosition);
-        this.currentPosition = setPoint;
-    }
+    controller.setReference(setPoint.position+initialEncoderPosition, ControlType.kPosition);
+    this.currentPosition = setPoint;
+    // if(Robot.elevator.currentTargetHeight == Height.GROUND){
+    //   if((setPoint == Position.FLOOR && currentPosition == Position.CARGO) || (setPoint == Position.CARGO && currentPosition == Position.FLOOR)){
+    //     controller.setReference(setPoint.position+initialEncoderPosition, ControlType.kPosition);
+    //     this.currentPosition = setPoint;
+    //   }
+    // }else if(setPoint == Position.REAR){
+    //   if(Robot.elevator.currentTargetHeight == Height.LEVEL3H){
+    //     controller.setReference(setPoint.position+initialEncoderPosition, ControlType.kPosition);
+    //     this.currentPosition = setPoint;
+    //   }
+    // }else if(Robot.elevator.currentTargetHeight == Height.GROUND){
+    //   System.out.println("Tried to move elevator in bottom state");
+    // } else{
+    //   controller.setReference(setPoint.position+initialEncoderPosition, ControlType.kPosition);
+    //     this.currentPosition = setPoint;
+    // }
   }
   
   @Override
@@ -109,7 +112,7 @@ public class Switcher extends Subsystem {
   }
 
   public Position getNextPosition(){
-    System.out.println("Switcher.getNextPosition");
+    //System.out.println("Switcher.getNextPosition");
     switch(currentPosition){
       case FLOOR:
         return Position.CARGO;

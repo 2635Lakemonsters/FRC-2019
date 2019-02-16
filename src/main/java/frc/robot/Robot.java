@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
+import frc.robot.model.GameToolStateMachine;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -29,6 +30,7 @@ public class Robot extends TimedRobot {
   public static Elevator elevator;
   public static Flower flower;
   public static Switcher switcher;
+  public static GameToolStateMachine gameToolStateMachine;
 
   SPathLeftCmd sPathLeftCmd;
   DriveCommand driveCommand;
@@ -39,6 +41,11 @@ public class Robot extends TimedRobot {
   SwitcherUpCommand switcherUpCommand;
   SwitcherDownCommand switcherDownCommand;
   SwitcherEncoderResetCommand switcherEncoderResetCommand;
+  GameToolIncrementCommand gameToolIncrementCommand;
+  GameToolDecrementCommand gameToolDecrementCommand;
+  GameToolSwapCommand gameToolSwapCommand;
+  GameToolFlowerCommand gameToolFlowerCommand;
+  
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -55,6 +62,7 @@ public class Robot extends TimedRobot {
     elevator = new Elevator();
     flower = new Flower();
     switcher = new Switcher();
+    gameToolStateMachine = new GameToolStateMachine();
 
     sPathLeftCmd = new SPathLeftCmd();
     driveCommand = new DriveCommand();
@@ -64,18 +72,27 @@ public class Robot extends TimedRobot {
     switcherUpCommand = new SwitcherUpCommand();
     switcherDownCommand = new SwitcherDownCommand();
     switcherEncoderResetCommand = new SwitcherEncoderResetCommand(5);
+    gameToolIncrementCommand = new GameToolIncrementCommand();
+    gameToolDecrementCommand = new GameToolDecrementCommand();
+    gameToolSwapCommand = new GameToolSwapCommand();
+    gameToolFlowerCommand = new GameToolFlowerCommand();
 
     //m_chooser.setDefaultOption("Default Auto", new PathTestCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
     oi.sPathButton.whenPressed(sPathLeftCmd);
     oi.grabberExtendButton.whenPressed(extenderCommand);
-    oi.flowerButtonL.whenPressed(flowerCommand);
-    oi.flowerButtonR.whenPressed(flowerCommand);
+    //oi.flowerButtonL.whenPressed(flowerCommand);
+    //oi.flowerButtonR.whenPressed(flowerCommand);
     oi.reverseButton.whenPressed(reverseCommand);
     oi.encoderResetButton.whenPressed(encoderResetCommand);
     oi.switcherUpButton.whenPressed(switcherUpCommand);
     oi.switcherDownButton.whenPressed(switcherDownCommand);
+    oi.gameToolIncrementButton.whenPressed(gameToolIncrementCommand);
+    oi.gameToolDecrementButton.whenPressed(gameToolDecrementCommand);
+    oi.gameToolSwapButton.whenPressed(gameToolSwapCommand);
+    oi.gameToolFlowerButtonL.whenPressed(gameToolFlowerCommand);
+    oi.gameToolFlowerButtonR.whenPressed(gameToolFlowerCommand);
     
   }
 
@@ -169,7 +186,7 @@ boolean autoHappened = false;
   @Override
   public void teleopInit() {
     if(!autoHappened){
-      switcherEncoderResetCommand.start();   //remove for real competitions
+      //switcherEncoderResetCommand.start();   //remove for real competitions
     }
 
 		if (driveCommand != null) {
