@@ -8,12 +8,9 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.TimedCommand;
-import frc.robot.Robot;
 
-public class ToggleFlowerExtendCommand extends Command {
-  public ToggleFlowerExtendCommand() {
-    //super(timeout);
+public class TempCommand extends Command {
+  public TempCommand() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -26,13 +23,13 @@ public class ToggleFlowerExtendCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.flower.toggleExtender();
+    System.out.println("this is spam, please pay attention");
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return true;
+    return false;
   }
 
   // Called once after isFinished returns true

@@ -48,9 +48,15 @@ public class OI {
   public Button sPathButton = new JoystickButton(leftJoy, RobotMap.S_PATH_LEFT_BUTTON);
 
   public Button grabberExtendButton = new JoystickButton(leftJoy, RobotMap.EXTENDER_BUTTON);
-  public Button flowerButtonL = new JoystickButton(leftJoy, RobotMap.LEFT_FLOWER_BUTTON);
-  public Button flowerButtonR = new JoystickButton(leftJoy, RobotMap.RIGHT_FLOWER_BUTTON);
+  //public Button flowerButtonL = new JoystickButton(leftJoy, RobotMap.LEFT_FLOWER_BUTTON);
+  //public Button flowerButtonR = new JoystickButton(rightJoy, RobotMap.RIGHT_FLOWER_BUTTON);
   public Button reverseButton = new JoystickButton(rightJoy, RobotMap.REVERSE_BUTTON);
   public Button encoderResetButton = new JoystickButton(rightJoy, RobotMap.ENCODER_RESET_BUTTON);
-  public Button switcherButton = new JoystickButton(rightJoy, RobotMap.SWITCHER_BUTTON);
+  public Button switcherUpButton = new JoystickButton(rightJoy, RobotMap.SWITCHER_UP_BUTTON);
+  public Button switcherDownButton = new JoystickButton(rightJoy, RobotMap.SWITCHER_DOWN_BUTTON);
+  public Button gameToolIncrementButton = new JoystickButton(leftJoy, RobotMap.GAME_TOOL_INCREMENT_BUTTON);
+  public Button gameToolDecrementButton = new JoystickButton(leftJoy, RobotMap.GAME_TOOL_DECREMENT_BUTTON);
+  public Button gameToolSwapButton = new JoystickButton(leftJoy, RobotMap.GAME_TOOL_SWAP_BUTTON);
+  public Button gameToolFlowerButtonL = new JoystickButton(leftJoy, RobotMap.GAME_TOOL_FLOWER_BUTTON);
+  public Button gameToolFlowerButtonR = new JoystickButton(rightJoy, RobotMap.GAME_TOOL_FLOWER_BUTTON);
 }

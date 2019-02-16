@@ -22,28 +22,9 @@ public class ElevatorUpCommand extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	switch(Robot.elevator.currentTargetHeight) {
-    	case GROUND:
-			Robot.elevator.setTargetHeight(Height.EXCHANGE);
-			 break;
-    	case EXCHANGE:
-			Robot.elevator.setTargetHeight(Height.STACK);
-			 break;
-    	case STACK:
-			Robot.elevator.setTargetHeight(Height.SWITCH);
-			 break;
-		case SWITCH:
-			Robot.elevator.setTargetHeight(Height.SCALE);
-	         break;
-		case SCALE:
-			Robot.elevator.setTargetHeight(Height.CLIMB);
-	         break;
-		case CLIMB:
-			Robot.elevator.setTargetHeight(Height.CLIMB);
-	    default:
-	       
-		}
-    	System.out.println("Initialize called");
+    	Height newTargetHeight = Robot.elevator.getUpperHeight();
+		Robot.elevator.setTargetHeight(newTargetHeight);
+    	//System.out.println(newTargetHeight.toString());
     }
 
     // Make this return true when this Command no longer needs to run execute()

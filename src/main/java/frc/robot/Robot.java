@@ -7,26 +7,14 @@
 
 package frc.robot;
 
-import java.io.IOException;
-
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.ExampleCommand;
-import jaci.pathfinder.Pathfinder;
-import jaci.pathfinder.PathfinderFRC;
-import jaci.pathfinder.Trajectory;
-import jaci.pathfinder.followers.EncoderFollower;
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
+import frc.robot.model.GameToolStateMachine;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -42,6 +30,7 @@ public class Robot extends TimedRobot {
   public static Elevator elevator;
   public static Flower flower;
   public static Switcher switcher;
+  public static GameToolStateMachine gameToolStateMachine;
 
   SPathLeftCmd sPathLeftCmd;
   DriveCommand driveCommand;
@@ -49,8 +38,14 @@ public class Robot extends TimedRobot {
   ToggleFlowerCommand flowerCommand;
   ReverseCommand reverseCommand;
   EncoderResetCommand encoderResetCommand;
-  SwitcherCommand switcherCommand;
+  SwitcherUpCommand switcherUpCommand;
+  SwitcherDownCommand switcherDownCommand;
   SwitcherEncoderResetCommand switcherEncoderResetCommand;
+  GameToolIncrementCommand gameToolIncrementCommand;
+  GameToolDecrementCommand gameToolDecrementCommand;
+  GameToolSwapCommand gameToolSwapCommand;
+  GameToolFlowerCommand gameToolFlowerCommand;
+  
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -67,25 +62,38 @@ public class Robot extends TimedRobot {
     elevator = new Elevator();
     flower = new Flower();
     switcher = new Switcher();
+    gameToolStateMachine = new GameToolStateMachine();
 
     sPathLeftCmd = new SPathLeftCmd();
     driveCommand = new DriveCommand();
     extenderCommand = new ToggleFlowerExtendCommand();
     reverseCommand = new ReverseCommand();
     encoderResetCommand = new EncoderResetCommand(5);
-    switcherCommand = new SwitcherCommand();
+    switcherUpCommand = new SwitcherUpCommand();
+    switcherDownCommand = new SwitcherDownCommand();
     switcherEncoderResetCommand = new SwitcherEncoderResetCommand(5);
+    gameToolIncrementCommand = new GameToolIncrementCommand();
+    gameToolDecrementCommand = new GameToolDecrementCommand();
+    gameToolSwapCommand = new GameToolSwapCommand();
+    gameToolFlowerCommand = new GameToolFlowerCommand();
 
     //m_chooser.setDefaultOption("Default Auto", new PathTestCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
     oi.sPathButton.whenPressed(sPathLeftCmd);
     oi.grabberExtendButton.whenPressed(extenderCommand);
-    oi.flowerButtonL.whenPressed(flowerCommand);
-    oi.flowerButtonR.whenPressed(flowerCommand);
+    //oi.flowerButtonL.whenPressed(flowerCommand);
+    //oi.flowerButtonR.whenPressed(flowerCommand);
     oi.reverseButton.whenPressed(reverseCommand);
     oi.encoderResetButton.whenPressed(encoderResetCommand);
-    oi.switcherButton.toggleWhenPressed(switcherCommand);
+    oi.switcherUpButton.whenPressed(switcherUpCommand);
+    oi.switcherDownButton.whenPressed(switcherDownCommand);
+    oi.gameToolIncrementButton.whenPressed(gameToolIncrementCommand);
+    oi.gameToolDecrementButton.whenPressed(gameToolDecrementCommand);
+    oi.gameToolSwapButton.whenPressed(gameToolSwapCommand);
+    oi.gameToolFlowerButtonL.whenPressed(gameToolFlowerCommand);
+    oi.gameToolFlowerButtonR.whenPressed(gameToolFlowerCommand);
+    
   }
 
   /**
@@ -113,6 +121,7 @@ public class Robot extends TimedRobot {
 		}
     if(autoHappened){
       driveSubsystem.endPath();
+      
       autoHappened = false;
     }
   }
@@ -160,8 +169,8 @@ boolean autoHappened = false;
     if (m_autonomousCommand != null) {
       //m_autonomousCommand.start();
       }
-      driveSubsystem.bullyOff();
-      autoHappened = true;
+    driveSubsystem.bullyOff();
+    autoHappened = true;
   }
 
   /**
@@ -176,7 +185,9 @@ boolean autoHappened = false;
   boolean boolistatus;
   @Override
   public void teleopInit() {
-    switcherEncoderResetCommand.start();   //remove for real competitions
+    if(!autoHappened){
+      //switcherEncoderResetCommand.start();   //remove for real competitions
+    }
 
 		if (driveCommand != null) {
 			driveCommand.start();

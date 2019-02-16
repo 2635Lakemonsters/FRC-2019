@@ -231,8 +231,9 @@ public class DriveSubsystem extends Subsystem {
 
   
   public void endPath() {
-    
-    m_follower_notifier.stop();
+    if(m_follower_notifier != null){
+      m_follower_notifier.stop();
+    }
     tankDrive(0.0,0.0);
     //FRMotor.set(0);
     //FLMotor.set(0);

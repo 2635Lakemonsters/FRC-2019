@@ -8,14 +8,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.TimedCommand;
 import frc.robot.Robot;
+import frc.robot.subsystems.Switcher.Position;
 
-public class ToggleFlowerExtendCommand extends Command {
-  public ToggleFlowerExtendCommand() {
-    //super(timeout);
+public class SwitcherTargetCommand extends Command {
+  Position targetPosition;
+  public SwitcherTargetCommand(Position targetPosition) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
+    this.targetPosition = targetPosition;
   }
 
   // Called just before this Command runs the first time
@@ -26,7 +27,7 @@ public class ToggleFlowerExtendCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.flower.toggleExtender();
+    Robot.switcher.moveSwitch(targetPosition);
   }
 
   // Make this return true when this Command no longer needs to run execute()
