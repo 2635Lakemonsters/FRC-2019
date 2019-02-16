@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.subsystems.Switcher.Position;
 
 public class SwitcherDownCommand extends Command {
   public SwitcherDownCommand() {
@@ -19,7 +20,15 @@ public class SwitcherDownCommand extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.switcher.moveSwitch(Robot.switcher.getPrevPosition());
+    Position prevPosition = Robot.switcher.getPrevPosition();
+    if(prevPosition == Position.HATCH){
+      Robot.switcher.moveSwitch(Position.CARGO);
+    }else if(prevPosition == Position.CARGO){
+      
+      Robot.elevator.setTargetHeight(Robot.elevator.getSwappedState());
+    }else{
+      Robot.switcher.moveSwitch(prevPosition);
+    }
   }
 
   // Called repeatedly when this Command is scheduled to run

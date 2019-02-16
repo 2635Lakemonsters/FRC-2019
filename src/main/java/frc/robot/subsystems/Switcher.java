@@ -14,7 +14,9 @@ import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
+import frc.robot.subsystems.Elevator.Height;
 
 /**
  * Add your docs here.
@@ -65,15 +67,27 @@ public class Switcher extends Subsystem {
   }
 
   public void moveSwitch(Position setPoint) {
-    //PLACE LOGIC HEAR FOR WHEN ABLE TO GO TO WHAT STATE?!
+    //LOGIC HEAR FOR WHEN ABLE TO GO TO WHAT STATE
     //if elevator at top, may go to rear
     //if elevator at bottom, may not change state
     //Probably only go to floor level if elevator at bottom
     System.out.println("Switcher.moveSwitch");
-    controller.setReference(setPoint.position+initialEncoderPosition, ControlType.kPosition);
-   
-
-    this.currentPosition = setPoint;
+    if(Robot.elevator.currentTargetHeight == Height.GROUND){
+      if((setPoint == Position.FLOOR && currentPosition == Position.CARGO) || (setPoint == Position.CARGO && currentPosition == Position.FLOOR)){
+        controller.setReference(setPoint.position+initialEncoderPosition, ControlType.kPosition);
+        this.currentPosition = setPoint;
+      }
+    }else if(setPoint == Position.REAR){
+      if(Robot.elevator.currentTargetHeight == Height.LEVEL3H){
+        controller.setReference(setPoint.position+initialEncoderPosition, ControlType.kPosition);
+        this.currentPosition = setPoint;
+      }
+    }else if(Robot.elevator.currentTargetHeight == Height.GROUND){
+      System.out.println("Tried to move elevator in bottom state");
+    } else{
+      controller.setReference(setPoint.position+initialEncoderPosition, ControlType.kPosition);
+        this.currentPosition = setPoint;
+    }
   }
   
   @Override

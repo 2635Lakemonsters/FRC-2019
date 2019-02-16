@@ -23,8 +23,12 @@ public class SwitcherUpCommand extends Command {
   @Override
   protected void initialize() {
     //Robot.switcher.moveSwitch(Switcher.Position.CARGO);
+    Position nextPosition = Robot.switcher.getNextPosition();
     System.out.println("switcherupcommand init");
-    Robot.switcher.moveSwitch(Robot.switcher.getNextPosition());
+    Robot.switcher.moveSwitch(nextPosition);
+    if(nextPosition == Position.HATCH){
+      Robot.elevator.setTargetHeight(Robot.elevator.getSwappedState());
+    }
   }
 
   // Called repeatedly when this Command is scheduled to run

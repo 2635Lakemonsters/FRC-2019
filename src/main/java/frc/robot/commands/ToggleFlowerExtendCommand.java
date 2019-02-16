@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.TimedCommand;
 import frc.robot.Robot;
 
 public class ToggleFlowerExtendCommand extends TimedCommand {
-  public ToggleFlowerExtendCommand(timeout) {
+  public ToggleFlowerExtendCommand(double timeout) {
     super(timeout);
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);

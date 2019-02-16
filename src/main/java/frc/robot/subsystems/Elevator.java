@@ -5,6 +5,7 @@ import frc.robot.RobotMap;
 import frc.robot.commands.ElevatorCommand;
 //import frc.robot.commands.EmptyCommand;
 import frc.robot.subsystems.Elevator.Height;
+import frc.robot.subsystems.Switcher.Position;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -221,16 +222,89 @@ public class Elevator extends Subsystem {
 	}
 	// No longer has fake values <3, this just sets the values for the ground, switch, scale, and climb heights that the elevator uses.
 	public static enum Height {
-		GROUND(RobotMap.ELEVATOR_GROUND_LOWER_HEIGHT),
-		EXCHANGE(RobotMap.ELEVATOR_EXCHANGE_LOWER_HEIGHT),
-		STACK(RobotMap.ELEVATOR_STACK_LOWER_HEIGHT),
-		SWITCH(RobotMap.ELEVATOR_SWITCH_LOWER_HEIGHT), 
-		SCALE(RobotMap.ELEVATOR_SCALE_LOWER_HEIGHT), 
-		CLIMB(RobotMap.ELEVATOR_CLIMB_LOWER_HEIGHT);
+		//GROUND(RobotMap.ELEVATOR_GROUND_LOWER_HEIGHT),
+		//EXCHANGE(RobotMap.ELEVATOR_EXCHANGE_LOWER_HEIGHT),
+		//STACK(RobotMap.ELEVATOR_STACK_LOWER_HEIGHT),
+		//SWITCH(RobotMap.ELEVATOR_SWITCH_LOWER_HEIGHT), 
+		//SCALE(RobotMap.ELEVATOR_SCALE_LOWER_HEIGHT), 
+		//CLIMB(RobotMap.ELEVATOR_CLIMB_LOWER_HEIGHT);
+
+		GROUND(RobotMap.ELEVATOR_GROUND_HEIGHT),
+		LEVEL1H(RobotMap.ELEVATOR_LEVEL1_HATCH_HEIGHT),
+		LEVEL1B(RobotMap.ELEVATOR_LEVEL1_BALL_HEIGHT),
+		LEVEL2H(RobotMap.ELEVATOR_LEVEL2_HATCH_HEIGHT),
+		LEVEL2B(RobotMap.ELEVATOR_LEVEL2_BALL_HEIGHT),
+		LEVEL3H(RobotMap.ELEVATOR_LEVEL3_HATCH_HEIGHT),
+		LEVEL3B(RobotMap.ELEVATOR_LEVEL3_BALL_HEIGHT);
 		
 		public int height;
 		private Height(int height) {
 			this.height = height;
+		}
+	}
+
+	public Height getUpperHeight(){
+		switch(currentTargetHeight){
+			case GROUND:
+				if(Robot.switcher.currentPosition == Position.HATCH){
+					return Height.LEVEL1H;
+				}else {
+					return Height.LEVEL1B;
+				}
+			case LEVEL1B:
+				return Height.LEVEL2B;
+			case LEVEL1H:
+				return Height.LEVEL2H;
+			case LEVEL2B:
+				return Height.LEVEL3B;
+			case LEVEL2H:
+				return Height.LEVEL3H;
+			case LEVEL3B:
+				return Height.LEVEL3B;
+			case LEVEL3H:
+				return Height.LEVEL3H;
+			default:
+				return Height.GROUND;
+		}
+	}
+
+	public Height getLowerHeight(){
+		switch(currentTargetHeight){
+			case GROUND:
+				return Height.GROUND;
+			case LEVEL1B:
+				return Height.GROUND;
+			case LEVEL1H:
+				return Height.GROUND;
+			case LEVEL2B:
+				return Height.LEVEL1B;
+			case LEVEL2H:
+				return Height.LEVEL1H;
+			case LEVEL3B:
+				return Height.LEVEL2B;
+			case LEVEL3H:
+				return Height.LEVEL2H;
+			default:
+				return Height.GROUND;
+		}
+	}
+
+	public Height getSwappedState(){
+		switch(currentTargetHeight){
+			case LEVEL1B:
+				return Height.LEVEL1H;
+			case LEVEL1H:
+				return Height.LEVEL1B;
+			case LEVEL2B:
+				return Height.LEVEL2H;
+			case LEVEL2H:
+				return Height.LEVEL2B;
+			case LEVEL3B:
+				return Height.LEVEL3H;
+			case LEVEL3H:
+				return Height.LEVEL3B;
+			default:
+				return Height.GROUND;
 		}
 	}
 	

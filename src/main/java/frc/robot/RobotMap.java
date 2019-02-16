@@ -71,6 +71,14 @@ public class RobotMap {
   public static final int ELEVATOR_SCALE_LOWER_HEIGHT = 0;
   public static final int ELEVATOR_CLIMB_LOWER_HEIGHT = 0;
 
+  public static final int ELEVATOR_GROUND_HEIGHT = 0;
+  public static final int ELEVATOR_LEVEL1_HATCH_HEIGHT = 0;
+  public static final int ELEVATOR_LEVEL1_BALL_HEIGHT = 0;
+  public static final int ELEVATOR_LEVEL2_HATCH_HEIGHT = 0;
+  public static final int ELEVATOR_LEVEL2_BALL_HEIGHT = 0;
+  public static final int ELEVATOR_LEVEL3_HATCH_HEIGHT = 0;
+  public static final int ELEVATOR_LEVEL3_BALL_HEIGHT = 0;
+
   //public static final String k_path_name = "example";
   //------------------------------------------------------
   public static final int SWITCHER_FLOOR = 0;
