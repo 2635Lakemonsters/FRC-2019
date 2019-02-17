@@ -165,8 +165,8 @@ public class DriveSubsystem extends Subsystem {
     Trajectory left_trajectory;
     Trajectory right_trajectory;
     
-    left_trajectory = PathfinderFRC.getTrajectory("DriveStraight.right"); //change this depending on which side
-    right_trajectory = PathfinderFRC.getTrajectory("DriveStraight.left");
+    left_trajectory = PathfinderFRC.getTrajectory("CenterLeftToCargoLeft.right"); //change this depending on which side
+    right_trajectory = PathfinderFRC.getTrajectory("CenterLeftToCargoLeft.left");
     
    
     

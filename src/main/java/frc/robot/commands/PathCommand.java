@@ -11,11 +11,13 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class SPathLeftCmd extends Command {
-  public SPathLeftCmd() {
+public class PathCommand extends Command {
+  String pathName;
+  public PathCommand() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(Robot.driveSubsystem);
+    //this.pathName = name;
   }
 
   // Called just before this Command runs the first time
@@ -36,7 +38,7 @@ public class SPathLeftCmd extends Command {
     boolean followersIsFinished = Robot.driveSubsystem.m_left_follower.isFinished() || Robot.driveSubsystem.m_right_follower.isFinished();
     if (followersIsFinished) {
       interrupted();
-      System.out.println("SPathLeftCommand finished");
+      System.out.println("PathCommand finished");
       return followersIsFinished;
     }
     else {

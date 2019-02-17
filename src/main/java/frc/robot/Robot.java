@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
   public static Switcher switcher;
   public static GameToolStateMachine gameToolStateMachine;
 
-  SPathLeftCmd sPathLeftCmd;
+  PathCommand pathCommand;
   DriveCommand driveCommand;
   ToggleFlowerExtendCommand extenderCommand;
   ToggleFlowerCommand flowerCommand;
@@ -64,7 +64,7 @@ public class Robot extends TimedRobot {
     switcher = new Switcher();
     gameToolStateMachine = new GameToolStateMachine();
 
-    sPathLeftCmd = new SPathLeftCmd();
+    pathCommand = new PathCommand();
     driveCommand = new DriveCommand();
     extenderCommand = new ToggleFlowerExtendCommand();
     reverseCommand = new ReverseCommand();
@@ -80,7 +80,7 @@ public class Robot extends TimedRobot {
     //m_chooser.setDefaultOption("Default Auto", new PathTestCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
-    oi.sPathButton.whenPressed(sPathLeftCmd);
+    oi.sPathButton.whenPressed(pathCommand);
     oi.grabberExtendButton.whenPressed(extenderCommand);
     //oi.flowerButtonL.whenPressed(flowerCommand);
     //oi.flowerButtonR.whenPressed(flowerCommand);
