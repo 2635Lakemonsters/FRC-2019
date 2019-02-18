@@ -7,6 +7,10 @@
 
 package frc.robot;
 
+import java.util.Map;
+
+import javax.swing.text.html.HTMLDocument.Iterator;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -14,7 +18,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
+import frc.robot.model.AutonomousLibrary;
 import frc.robot.model.GameToolStateMachine;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -32,7 +38,6 @@ public class Robot extends TimedRobot {
   public static Switcher switcher;
   public static GameToolStateMachine gameToolStateMachine;
 
-  PathCommand pathCommand;
   DriveCommand driveCommand;
   ToggleFlowerExtendCommand extenderCommand;
   ToggleFlowerCommand flowerCommand;
@@ -64,7 +69,6 @@ public class Robot extends TimedRobot {
     switcher = new Switcher();
     gameToolStateMachine = new GameToolStateMachine();
 
-    pathCommand = new PathCommand();
     driveCommand = new DriveCommand();
     extenderCommand = new ToggleFlowerExtendCommand();
     reverseCommand = new ReverseCommand();
@@ -77,10 +81,8 @@ public class Robot extends TimedRobot {
     gameToolSwapCommand = new GameToolSwapCommand();
     gameToolFlowerCommand = new GameToolFlowerCommand();
 
-    //m_chooser.setDefaultOption("Default Auto", new PathTestCommand());
-    // chooser.addOption("My Auto", new MyAutoCommand());
-    SmartDashboard.putData("Auto mode", m_chooser);
-    oi.sPathButton.whenPressed(pathCommand);
+    InitChooser();
+
     oi.grabberExtendButton.whenPressed(extenderCommand);
     //oi.flowerButtonL.whenPressed(flowerCommand);
     //oi.flowerButtonR.whenPressed(flowerCommand);
@@ -95,6 +97,24 @@ public class Robot extends TimedRobot {
     oi.gameToolFlowerButtonR.whenPressed(gameToolFlowerCommand);
     
   }
+
+public void InitChooser() {
+  m_chooser.setDefaultOption("Center Left to Cargo Left", new PathCommand("CenterLeftToCargoLeft", false));
+  m_chooser.addOption("Left Cargo To Platform. (CAUTION)", new PathCommand("LeftCargoToPlatform", false));
+
+
+  Map<String, Command> pathComands = AutonomousLibrary.GetPathCommands();
+  for (Map.Entry<String, Command> entry : pathComands.entrySet()) {
+    String pathName = entry.getKey();
+    Command pathCommand = entry.getValue();
+    m_chooser.addOption(pathName, pathCommand);
+  }
+
+
+   SmartDashboard.putData("Auto mode", m_chooser);
+}
+
+
 
   /**
    * This function is called every robot packet, no matter the mode. Use
@@ -148,12 +168,12 @@ boolean autoHappened = false;
   public void autonomousInit() {
 
     //-------EXPERIMENTAL PATH WEAVER CODE-----------
-    switcherEncoderResetCommand.start();
+    //switcherEncoderResetCommand.start();
 
   //  driveSubsystem.PathAutoInit();
     //---------------------------------------------
     
-    //m_autonomousCommand = m_chooser.getSelected();
+    m_autonomousCommand = m_chooser.getSelected();
     
 
     //drive.motionMagic("aaa");
@@ -167,7 +187,7 @@ boolean autoHappened = false;
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      //m_autonomousCommand.start();
+      m_autonomousCommand.start();
       }
     driveSubsystem.bullyOff();
     autoHappened = true;
@@ -185,9 +205,8 @@ boolean autoHappened = false;
   boolean boolistatus;
   @Override
   public void teleopInit() {
-    if(!autoHappened){
-      //switcherEncoderResetCommand.start();   //remove for real competitions
-    }
+    
+    driveSubsystem.setReverse(false);
 
 		if (driveCommand != null) {
 			driveCommand.start();

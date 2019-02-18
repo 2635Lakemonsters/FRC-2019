@@ -28,7 +28,6 @@ public class SwitcherEncoderResetCommand extends TimedCommand {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    System.out.println("switch reset init");
     elapsedTimeCount = 0;
     isStalled = false;
   }
@@ -36,8 +35,7 @@ public class SwitcherEncoderResetCommand extends TimedCommand {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-      System.out.println("switch reset execute");
-
+ 
       elapsedTimeCount = elapsedTimeCount + 1;
       Robot.switcher.switchMotor.set(-0.1);
       System.out.println("current:" + Robot.switcher.switchMotor.getOutputCurrent());
