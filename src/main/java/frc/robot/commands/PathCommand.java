@@ -11,17 +11,26 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class SPathLeftCmd extends Command {
-  public SPathLeftCmd() {
+public class PathCommand extends Command {
+  String pathName;
+  boolean isReversed;
+  public PathCommand(String pathName, boolean isReversed) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(Robot.driveSubsystem);
+    this.pathName = pathName;
+    this.isReversed = isReversed;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.driveSubsystem.PathAutoInit();
+
+    System.out.println("PathCommand:Initialize, isReversed: " + isReversed);
+    boolean pathInitialized = Robot.driveSubsystem.PathAutoInit(this.pathName);
+    if (!pathInitialized)
+      end();
+    Robot.driveSubsystem.setReverse(isReversed);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -36,7 +45,7 @@ public class SPathLeftCmd extends Command {
     boolean followersIsFinished = Robot.driveSubsystem.m_left_follower.isFinished() || Robot.driveSubsystem.m_right_follower.isFinished();
     if (followersIsFinished) {
       interrupted();
-      System.out.println("SPathLeftCommand finished");
+      System.out.println("PathCommand finished");
       return followersIsFinished;
     }
     else {

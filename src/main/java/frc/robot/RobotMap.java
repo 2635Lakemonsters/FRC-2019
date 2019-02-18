@@ -32,14 +32,18 @@ public class RobotMap {
   public static int BACK_LEFT_MOTOR_CHANNEL = 4;
   public static int SWITCH_MOTOR_CHANNEL = 7;
 
-  public static int S_PATH_LEFT_BUTTON = 2;
+  public static int S_PATH_LEFT_BUTTON = 8;
   public static int EXTENDER_BUTTON = 3;
-  public static int LEFT_FLOWER_BUTTON = 1;
-  public static int RIGHT_FLOWER_BUTTON = 1;
+  //public static int LEFT_FLOWER_BUTTON = 1;
+  //public static int RIGHT_FLOWER_BUTTON = 1;
   public static int REVERSE_BUTTON = 2;
   public static int ENCODER_RESET_BUTTON = 6;
-
-  public static int SWITCHER_VELOCITY = 10;
+  public static int SWITCHER_UP_BUTTON = 5;
+  public static int SWITCHER_DOWN_BUTTON = 4;
+  public static int GAME_TOOL_INCREMENT_BUTTON = 5;
+  public static int GAME_TOOL_DECREMENT_BUTTON = 4;
+  public static int GAME_TOOL_SWAP_BUTTON = 2;
+  public static int GAME_TOOL_FLOWER_BUTTON = 1;
 
   //--------EXPERIMENTAL PATHWEAVER CONSTANTS------------
   public static final int k_ticks_per_rev = 4096/*/3*/;//2018 Comp Bot
@@ -71,7 +75,19 @@ public class RobotMap {
   public static final int ELEVATOR_SCALE_LOWER_HEIGHT = 0;
   public static final int ELEVATOR_CLIMB_LOWER_HEIGHT = 0;
 
+  public static final int ELEVATOR_GROUND_HEIGHT = 0;
+  public static final int ELEVATOR_LEVEL1_HATCH_HEIGHT = 0;
+  public static final int ELEVATOR_LEVEL1_BALL_HEIGHT = 0;
+  public static final int ELEVATOR_LEVEL2_HATCH_HEIGHT = 0;
+  public static final int ELEVATOR_LEVEL2_BALL_HEIGHT = 0;
+  public static final int ELEVATOR_LEVEL3_HATCH_HEIGHT = 0;
+  public static final int ELEVATOR_LEVEL3_BALL_HEIGHT = 0;
+
   //public static final String k_path_name = "example";
   //------------------------------------------------------
+  public static final int SWITCHER_FLOOR = 0;
+  public static final int SWITCHER_CARGO = 1;
+  public static final int SWITCHER_HATCH = 2;
+  public static final int SWITCHER_REAR = 3;
   
 }

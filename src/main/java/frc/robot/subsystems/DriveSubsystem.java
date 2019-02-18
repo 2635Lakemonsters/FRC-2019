@@ -133,8 +133,10 @@ public class DriveSubsystem extends Subsystem {
     double tempLeft;
 		double absleft = Math.abs(left);
 		double absright = Math.abs(right);
-		if(absleft<0.05) left = 0;
-    if(absright<0.05) right = 0;
+    if(absleft<0.05) 
+      left = 0;
+    if(absright<0.05) 
+      right = 0;
     if(getReverse()) {
       tempLeft = right;
       right = -left;
@@ -142,14 +144,14 @@ public class DriveSubsystem extends Subsystem {
     } 
     FRMotor.set(-right);
     FLMotor.set(left);
-    //System.out.println("Left: " + FLMotor.getSelectedSensorPosition());
-    //System.out.println("Right: " + FRMotor.getSelectedSensorPosition());
+    System.out.println("Left: " + FLMotor.getSelectedSensorPosition());
+    System.out.println("Right: " + FRMotor.getSelectedSensorPosition());
 			
 		}
   //---------EXPERIMENTAL PATH WEAVER CODE-----------
   
   
-  public void PathAutoInit() {
+  public boolean PathAutoInit(String pathname) {
     FRMotor.setSelectedSensorPosition(0, 0, 0);
     FLMotor.setSelectedSensorPosition(0, 0, 0);
     
@@ -159,15 +161,23 @@ public class DriveSubsystem extends Subsystem {
     //Trajectory feu = new Trajectory(PathfinderJNI.trajectoryDeserializeCSV(tmep.getAbsolutePath()));
     //System.out.println(tmep.exists());
     //System.out.println(Filesystem.getDeployDirectory().toString() + "/paths/" + "Straight.left" + ".pf1.csv");
-   // Trajectory left_trajectory = PathfinderFRC.getTrajectory("Curved.right"); //change this depending on which side
-    //Trajectory right_trajectory = PathfinderFRC.getTrajectory("Curved.left");
     //System.out.println("TestEnd");
     Trajectory left_trajectory;
     Trajectory right_trajectory;
+    File file = new  File(Filesystem.getDeployDirectory(), "paths/" + pathname + ".pf1.csv");
+  
+    if (!file.exists())
+    {
+       System.out.println("Path Init Error!!!!");
+       System.out.println("File '" + file.getAbsolutePath() + "' not found.");
+       return false;
+       
+    }
+
     
-    left_trajectory = PathfinderFRC.getTrajectory("DriveStraight.right"); //change this depending on which side
-    right_trajectory = PathfinderFRC.getTrajectory("DriveStraight.left");
-    
+    left_trajectory = PathfinderFRC.getTrajectory(pathname + ".right"); //change this depending on which side
+    right_trajectory = PathfinderFRC.getTrajectory(pathname + ".left");
+    System.out.println("PathAutoInit: pathname: " + pathname);
    
     
     m_left_follower = new EncoderFollower(left_trajectory);
@@ -186,7 +196,7 @@ public class DriveSubsystem extends Subsystem {
     
     m_follower_notifier = new Notifier(this::followPath);
     m_follower_notifier.startPeriodic(left_trajectory.get(0).dt);
-    //System.out.println("Dt: " + left_trajectory.get(0).dt);
+    return true;
   }
 
   public void followPath() {
@@ -205,6 +215,7 @@ public class DriveSubsystem extends Subsystem {
       double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
       //double turn =  1.5 * (-1.0/80.0) * heading_difference;
       double turn =  0.02 * heading_difference;
+      //double turn = 0;
       // FRMotor.set(ControlMode.PercentOutput, -(right_speed) );
       // FLMotor.set(ControlMode.PercentOutput, left_speed);
       // if(!swapped){
@@ -231,8 +242,9 @@ public class DriveSubsystem extends Subsystem {
 
   
   public void endPath() {
-    
-    m_follower_notifier.stop();
+    if(m_follower_notifier != null){
+      m_follower_notifier.stop();
+    }
     tankDrive(0.0,0.0);
     //FRMotor.set(0);
     //FLMotor.set(0);

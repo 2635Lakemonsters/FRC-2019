@@ -20,6 +20,8 @@ public class Flower extends Subsystem {
   DoubleSolenoid extender1;
   DoubleSolenoid extender2;
   DoubleSolenoid grabber;
+  FlowerIO currentFlowerIO;
+  FlowerBud currentFlowerBud;
 
   @Override
   public void initDefaultCommand() {
@@ -32,6 +34,24 @@ public class Flower extends Subsystem {
     extender2 = new DoubleSolenoid(2, 3);
 
     grabber = new DoubleSolenoid(4, 5);
+  }
+
+  public void setFlowerBud(FlowerBud input) {
+    if(input == FlowerBud.FLOWER) {
+        openFlower();
+    } else if(input == FlowerBud.BUD) {
+        closeFlower();
+    }
+    currentFlowerBud = input;
+  }
+
+  public void setFlowerIO(FlowerIO input) {
+    if(input == FlowerIO.OUT) {
+        extendFlower();
+    } else if(input == FlowerIO.IN) {
+        retractFlower();
+    }
+    currentFlowerIO = input;
   }
 
   public void extendFlower(){
@@ -74,4 +94,13 @@ public class Flower extends Subsystem {
     }
   }
 
+  public static enum FlowerBud {
+    BUD(),
+    FLOWER();
+  }
+
+  public static enum FlowerIO {
+    IN(),
+    OUT();
+  }
 }
