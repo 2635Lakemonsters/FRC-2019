@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.commands.DriveCommand;
-import frc.robot.model.PathDatum;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.PathfinderFRC;
 import jaci.pathfinder.PathfinderJNI;
@@ -52,8 +51,6 @@ public class DriveSubsystem extends Subsystem {
 
   public long startTime;
   int  index;
-  PathDatum[] LeftDrivePath;
-  PathDatum[] RightDrivePath;
   Solenoid gearBoxSolenoid;
 
   //---------EXPERIMENTAL PATH WEAVER CODE----------

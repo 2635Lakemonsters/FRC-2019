@@ -31,6 +31,14 @@ public class AutonomousLibrary {
 
         return output;
     }
+    public static CommandGroup CornerLeftToCargoLeft() {
+        CommandGroup output = new CommandGroup();
+
+        PathCommand pathCmd = new PathCommand("CornerLeftToCargoLeft", false);
+        output.addSequential(pathCmd);
+
+        return output;
+    }
 
     
   /**
