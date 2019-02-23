@@ -9,6 +9,12 @@ import frc.robot.subsystems.Switcher.Position;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANPIDController;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMaxLowLevel.ConfigParameter;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Command;
@@ -21,8 +27,13 @@ public class Elevator extends Subsystem {
 
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
-	WPI_TalonSRX smallMotor;
-	WPI_TalonSRX largeMotor1; 
+	CANSparkMax smallMotor;
+	CANSparkMax largeMotor1; 
+
+	CANPIDController smallController;
+	CANEncoder smallEncoder;
+	CANPIDController largeController;
+	CANEncoder largeEncoder;
 	
 	// begin - replacement of 2 bag motors with one full CIM motor
 	//WPI_TalonSRX largeMotor2; 
@@ -47,8 +58,17 @@ public class Elevator extends Subsystem {
 	
 	
 	public Elevator() {
-		smallMotor  = new WPI_TalonSRX(RobotMap.ELEVATOR_UPPER_MOTOR_CHANNEL);
-    	largeMotor1 = new WPI_TalonSRX(RobotMap.ELEVATOR_LOWER_MOTOR1_CHANNEL);
+		//smallMotor  = new WPI_TalonSRX(RobotMap.ELEVATOR_UPPER_MOTOR_CHANNEL);
+		//largeMotor1 = new WPI_TalonSRX(RobotMap.ELEVATOR_LOWER_MOTOR1_CHANNEL);
+		
+		smallMotor = new CANSparkMax(RobotMap.ELEVATOR_UPPER_MOTOR_CHANNEL, MotorType.kBrushless);
+		largeMotor1 = new CANSparkMax(RobotMap.ELEVATOR_LOWER_MOTOR1_CHANNEL, MotorType.kBrushless);
+
+		smallController = new CANPIDController(smallMotor);
+		smallEncoder = new CANEncoder(smallMotor);
+		
+		largeController = new CANPIDController(largeMotor1);
+    	largeEncoder = new CANEncoder(largeMotor1);
 
     	
     	//bottomLimitSwitch = new DigitalInput(RobotMap.ELEVATOR_BOTTOM_LIMIT_SWITCH_IO_CHANNEL); 
@@ -69,11 +89,11 @@ public class Elevator extends Subsystem {
     	double theCurrentHeight = currentHeight();
     	
     	
-    	largeMotor1.setSensorPhase(true);
+    	//largeMotor1.setSensorPhase(true);
     	
     	// begin - reverse for replacement of bag motor by mini-CIM
-    	smallMotor.setInverted(true);
-    	smallMotor.setSensorPhase(true);
+    	//smallMotor.setInverted(true);
+    	//smallMotor.setSensorPhase(true);
 		// end - reverse for replacement of bag motor by mini-CIM
 		
     	currentTargetHeight = Height.GROUND;
@@ -109,14 +129,19 @@ public class Elevator extends Subsystem {
 		}
 
 		if (currentTargetHeight == Height.GROUND && isWithinTolerance(Height.GROUND)) {
-			largeMotor1.set(ControlMode.PercentOutput, 0);
-			smallMotor.set(ControlMode.PercentOutput, 0);
+			//largeMotor1.set(ControlMode.PercentOutput, 0);
+			//smallMotor.set(ControlMode.PercentOutput, 0);
+			largeController.setReference(0, ControlType.kPosition);
+			smallController.setReference(0, ControlType.kPosition);
 			
 			
 		}
 		else {
-			largeMotor1.set(ControlMode.MotionMagic, upperHeight);
-			smallMotor.set(ControlMode.MotionMagic, lowerHeight);
+			//largeMotor1.set(ControlMode.MotionMagic, upperHeight);
+			//smallMotor.set(ControlMode.MotionMagic, lowerHeight);
+
+			largeController.setReference(upperHeight, ControlType.kPosition);
+			smallController.setReference(lowerHeight, ControlType.kPosition);
 			
 		}
 		
@@ -145,8 +170,8 @@ public class Elevator extends Subsystem {
 	
 	public double currentHeight() {
 		
-		double upperHeight = Math.abs(largeMotor1.getSelectedSensorPosition(0));
-		double lowerHeight = Math.abs(smallMotor.getSelectedSensorPosition(0));
+		double upperHeight = Math.abs(largeEncoder.getPosition());
+		double lowerHeight = Math.abs(smallEncoder.getPosition());
 		
 		double totalHeight = lowerHeight+upperHeight;
 		//System.out.println("lowerHeight:" + lowerHeight + "\tupperHeight:" + upperHeight + "\t totalHeight:" + totalHeight);
@@ -174,8 +199,8 @@ public class Elevator extends Subsystem {
     	}
 		
     	
-    	double upperEncoderPosition = smallMotor.getSelectedSensorPosition(0);
-    	double lowerEncoderPosition = largeMotor1.getSelectedSensorPosition(1);
+    	double upperEncoderPosition = smallEncoder.getPosition();
+    	double lowerEncoderPosition = largeEncoder.getPosition();;
 		return false;
 	}
 	
@@ -198,27 +223,45 @@ public class Elevator extends Subsystem {
 	public void encoderStart() {
 		
 		System.out.println("encoderStart()");
-		smallMotor.setSelectedSensorPosition(0, 0, 0);
-    	smallMotor.config_kP(0, 5, 0);
-    	smallMotor.config_kI(0, 0, 0);
-    	smallMotor.config_kD(0, 0, 0);
-    	smallMotor.config_kF(0, 0, 0);
+		// smallMotor.setSelectedSensorPosition(0, 0, 0);
+    	// smallMotor.config_kP(0, 5, 0);
+    	// smallMotor.config_kI(0, 0, 0);
+    	// smallMotor.config_kD(0, 0, 0);
+		// smallMotor.config_kF(0, 0, 0);
+		
+		smallEncoder.setPosition(0);
+		smallController.setP(5);
+		smallController.setI(0);
+		smallController.setD(0);
+		smallController.setFF(0);
     	
-    	largeMotor1.setSelectedSensorPosition(0, 0, 0);
-    	largeMotor1.config_kP(0, 5, 0);
-    	largeMotor1.config_kI(0, 0, 0);
-    	largeMotor1.config_kD(0, 0, 0);
-    	largeMotor1.config_kF(0, 0, 0);
+    	// largeMotor1.setSelectedSensorPosition(0, 0, 0);
+    	// largeMotor1.config_kP(0, 5, 0);
+    	// largeMotor1.config_kI(0, 0, 0);
+    	// largeMotor1.config_kD(0, 0, 0);
+		// largeMotor1.config_kF(0, 0, 0);
+
+		largeEncoder.setPosition(0);
+		largeController.setP(5);
+		largeController.setI(0);
+		largeController.setD(0);
+		largeController.setFF(0);
     	
     	
-    	largeMotor1.selectProfileSlot(0, 0);
-    	smallMotor.selectProfileSlot(0, 0);
+    	// largeMotor1.selectProfileSlot(0, 0);
+    	// smallMotor.selectProfileSlot(0, 0);
     	
-    	largeMotor1.configMotionAcceleration(RobotMap.ELEVATOR_ACCELERATION, 0);
-    	smallMotor.configMotionAcceleration(RobotMap.ELEVATOR_ACCELERATION, 0);
+    	// largeMotor1.configMotionAcceleration(RobotMap.ELEVATOR_ACCELERATION, 0);
+    	// smallMotor.configMotionAcceleration(RobotMap.ELEVATOR_ACCELERATION, 0);
     	
-    	largeMotor1.configMotionCruiseVelocity(RobotMap.ELEVATOR_VELOCITY, 0);
-    	smallMotor.configMotionCruiseVelocity(RobotMap.ELEVATOR_VELOCITY, 0);
+    	// largeMotor1.configMotionCruiseVelocity(RobotMap.ELEVATOR_VELOCITY, 0);
+		// smallMotor.configMotionCruiseVelocity(RobotMap.ELEVATOR_VELOCITY, 0);
+		
+		largeController.setSmartMotionMaxAccel(1, 0);
+		smallController.setSmartMotionMaxAccel(1, 0);
+
+		largeController.setSmartMotionMaxVelocity(1, 0);
+		largeController.setSmartMotionMaxVelocity(1, 0);
 	}
 	// No longer has fake values <3, this just sets the values for the ground, switch, scale, and climb heights that the elevator uses.
 	public static enum Height {

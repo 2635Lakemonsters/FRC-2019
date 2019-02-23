@@ -44,6 +44,7 @@ public class RobotMap {
   public static int GAME_TOOL_DECREMENT_BUTTON = 4;
   public static int GAME_TOOL_SWAP_BUTTON = 2;
   public static int GAME_TOOL_FLOWER_BUTTON = 1;
+  public static int CLIMB_BUTTON = 8;
 
   //--------EXPERIMENTAL PATHWEAVER CONSTANTS------------
   public static final int k_ticks_per_rev = 4096/*/3*/;//2018 Comp Bot

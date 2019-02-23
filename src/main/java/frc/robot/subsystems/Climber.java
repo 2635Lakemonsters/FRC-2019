@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
+import jdk.internal.vm.compiler.collections.EconomicMap;
 
 /**
  * Add your docs here.
@@ -62,6 +63,7 @@ public class Climber extends Subsystem {
   public void raiseFrontClimber(){
     FRExtender.set(ControlMode.Position, 0);
     FLExtender.set(ControlMode.Position, 0);
+    BExtender.set(ControlMode.Position, EXTENDER_HEIGHT);
   }
 
   public boolean raiseFrontClimberIsFinished(){
@@ -76,6 +78,8 @@ public class Climber extends Subsystem {
   }
 
   public void raiseBackClimber(){
+    FRExtender.set(ControlMode.Position, 0);
+    FLExtender.set(ControlMode.Position, 0);
     BExtender.set(ControlMode.Position, 0);
   }
 

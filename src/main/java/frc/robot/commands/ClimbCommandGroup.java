@@ -30,8 +30,11 @@ public class ClimbCommandGroup extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
+    addSequential(new ClimberTimeAvailableCommand());
     addSequential(new RaiseRobotCommand());
     addSequential(new ClimberDriveCommand(1));
     addSequential(new ClimberRaiseFrontCommand());
+    addSequential(new ClimberRaiseBackCommand());
+    
   }
 }

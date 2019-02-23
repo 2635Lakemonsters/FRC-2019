@@ -141,8 +141,8 @@ public class DriveSubsystem extends Subsystem {
     } 
     FRMotor.set(-right);
     FLMotor.set(left);
-    System.out.println("Left: " + FLMotor.getSelectedSensorPosition());
-    System.out.println("Right: " + FRMotor.getSelectedSensorPosition());
+    //System.out.println("Left: " + FLMotor.getSelectedSensorPosition());
+    //System.out.println("Right: " + FRMotor.getSelectedSensorPosition());
 			
 		}
   //---------EXPERIMENTAL PATH WEAVER CODE-----------

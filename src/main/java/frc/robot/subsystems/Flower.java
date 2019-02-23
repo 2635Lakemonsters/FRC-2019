@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Flower extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  DoubleSolenoid extender1;
+  //DoubleSolenoid extender1;
   DoubleSolenoid extender2;
   DoubleSolenoid grabber;
   FlowerIO currentFlowerIO;
@@ -30,10 +30,10 @@ public class Flower extends Subsystem {
   }
 
   public Flower(){
-    extender1 = new DoubleSolenoid(0, 1);
-    extender2 = new DoubleSolenoid(2, 3);
+    //extender1 = new DoubleSolenoid(0, 1);
+    extender2 = new DoubleSolenoid(0, 1);
 
-    grabber = new DoubleSolenoid(4, 5);
+    grabber = new DoubleSolenoid(2, 3);
   }
 
   public void setFlowerBud(FlowerBud input) {
@@ -55,23 +55,23 @@ public class Flower extends Subsystem {
   }
 
   public void extendFlower(){
-    extender1.set(Value.kForward);
+    //extender1.set(Value.kForward);
     extender2.set(Value.kForward);
   }
 
   public void retractFlower(){
-    extender1.set(Value.kReverse);
+    //extender1.set(Value.kReverse);
     extender2.set(Value.kReverse);
   }
 
   public void toggleExtender(){
-    Value currentStatus = extender1.get();
+    Value currentStatus = extender2.get();
 
     if(currentStatus == Value.kReverse){
-      extender1.set(Value.kForward);
+      //extender1.set(Value.kForward);
       extender2.set(Value.kForward);
     }else{
-      extender1.set(Value.kReverse);
+      //extender1.set(Value.kReverse);
       extender2.set(Value.kReverse);
     }
   }

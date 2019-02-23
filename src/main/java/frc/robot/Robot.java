@@ -11,6 +11,10 @@ import java.util.Map;
 
 import javax.swing.text.html.HTMLDocument.Iterator;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -37,6 +41,9 @@ public class Robot extends TimedRobot {
   public static Flower flower;
   public static Switcher switcher;
   public static GameToolStateMachine gameToolStateMachine;
+  public static Climber climber;
+  public static FMS fms;
+  public static Cargo cargo;
 
   DriveCommand driveCommand;
   ToggleFlowerExtendCommand extenderCommand;
@@ -50,7 +57,13 @@ public class Robot extends TimedRobot {
   GameToolDecrementCommand gameToolDecrementCommand;
   GameToolSwapCommand gameToolSwapCommand;
   GameToolFlowerCommand gameToolFlowerCommand;
+  public static ClimbCommandGroup climbCommandGroup;
+  ClimbCancelCommand climbCancelCommand;
+  ElevatorControl elevatorControl;
+  CargoOutCommand cargoOutCommand;
+  CargoInCommand cargoInCommand;
   
+  CANSparkMax SPARK;
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -68,6 +81,12 @@ public class Robot extends TimedRobot {
     flower = new Flower();
     switcher = new Switcher();
     gameToolStateMachine = new GameToolStateMachine();
+    climber = new Climber();
+    fms = new FMS();
+    cargo = new Cargo();
+
+    SPARK = new CANSparkMax(7, MotorType.kBrushless);
+    SPARK.restoreFactoryDefaults();
 
     driveCommand = new DriveCommand();
     extenderCommand = new ToggleFlowerExtendCommand();
@@ -80,21 +99,30 @@ public class Robot extends TimedRobot {
     gameToolDecrementCommand = new GameToolDecrementCommand();
     gameToolSwapCommand = new GameToolSwapCommand();
     gameToolFlowerCommand = new GameToolFlowerCommand();
+    climbCommandGroup = new ClimbCommandGroup();
+    elevatorControl = new ElevatorControl();
+    cargoOutCommand = new CargoOutCommand();
+    cargoInCommand = new CargoInCommand();
+    
 
     InitChooser();
 
-    oi.grabberExtendButton.whenPressed(extenderCommand);
+    //oi.grabberExtendButton.whenPressed(extenderCommand);
     //oi.flowerButtonL.whenPressed(flowerCommand);
     //oi.flowerButtonR.whenPressed(flowerCommand);
     oi.reverseButton.whenPressed(reverseCommand);
     oi.encoderResetButton.whenPressed(encoderResetCommand);
-    oi.switcherUpButton.whenPressed(switcherUpCommand);
-    oi.switcherDownButton.whenPressed(switcherDownCommand);
+    //oi.switcherUpButton.whenPressed(switcherUpCommand);
+    //oi.switcherDownButton.whenPressed(switcherDownCommand);
     oi.gameToolIncrementButton.whenPressed(gameToolIncrementCommand);
     oi.gameToolDecrementButton.whenPressed(gameToolDecrementCommand);
     oi.gameToolSwapButton.whenPressed(gameToolSwapCommand);
     oi.gameToolFlowerButtonL.whenPressed(gameToolFlowerCommand);
     oi.gameToolFlowerButtonR.whenPressed(gameToolFlowerCommand);
+    oi.climbButton.whenPressed(climbCommandGroup);
+    oi.climbCancelButton.whenPressed(climbCancelCommand);
+    oi.cargoInButton.whileHeld(cargoInCommand);
+    oi.cargoOutButton.whileHeld(cargoOutCommand);
     
   }
 
@@ -191,6 +219,8 @@ boolean autoHappened = false;
       }
     driveSubsystem.bullyOff();
     autoHappened = true;
+    elevator.encoderStart();
+		elevatorControl.start();
   }
 
   /**
@@ -228,6 +258,10 @@ boolean autoHappened = false;
     }
     driveSubsystem.bullyOff();
     boolistatus = false;
+    if(!autoHappened){
+      //elevator.encoderStart();
+    }
+		//elevatorControl.start();
 
   }
 
@@ -237,7 +271,7 @@ boolean autoHappened = false;
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
-    
+
     //System.out.println("Right: " + driveSubsystem.FLMotor.getSelectedSensorPosition(0));
     
 
@@ -247,6 +281,8 @@ boolean autoHappened = false;
     }else if(!oi.leftJoy.getRawButton(3) && boolistatus == true){
       boolistatus = false;
     }
+
+    //SPARK.set(-0.1);
     //System.out.println("Left Position: " + driveSubsystem.FLMotor.getSelectedSensorPosition(0));
     //System.out.println("Right Position: " + driveSubsystem.FRMotor.getSelectedSensorPosition(0));
 
