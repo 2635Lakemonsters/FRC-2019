@@ -177,32 +177,6 @@ public class Elevator extends Subsystem {
 		//System.out.println("lowerHeight:" + lowerHeight + "\tupperHeight:" + upperHeight + "\t totalHeight:" + totalHeight);
 		return totalHeight;
 	}
-	public boolean isLimitSwitchPressed(DigitalInput limitSwitch) {
-		boolean result = false;
-		try {
-			result = !limitSwitch.get();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			result = false;
-		}
-		return result;
-	}
-	
-	public boolean isFinished(){
-		if (isLimitSwitchPressed(bottomLimitSwitch)) {
-    		return true;
-    	}
-		
-		if (isLimitSwitchPressed(topLimitSwitch)) {
-    		return true;
-    	}
-		
-    	
-    	double upperEncoderPosition = smallEncoder.getPosition();
-    	double lowerEncoderPosition = largeEncoder.getPosition();;
-		return false;
-	}
 	
 	public boolean isWithinTolerance(Height height) {
 		double cHeight = currentHeight();

@@ -47,7 +47,8 @@ public class RobotMap {
   public static int CLIMB_BUTTON = 8;
 
   //--------EXPERIMENTAL PATHWEAVER CONSTANTS------------
-  public static final int k_ticks_per_rev = 4096/*/3*/;//2018 Comp Bot
+  // public static final int k_ticks_per_rev = 4096/*/3*/;//2018 Comp Bot
+  public static final int k_ticks_per_rev = 307; //42*7.31
   public static final double k_wheel_diameter = 0.49; //feet!
   public static final double k_max_velocity = 10.0;
 

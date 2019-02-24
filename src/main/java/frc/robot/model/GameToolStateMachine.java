@@ -21,7 +21,32 @@ public class GameToolStateMachine {
     public GameTools currentState;
 
     public GameToolStateMachine(){
-        currentState = GameTools.INITIAL;
+        currentState = GameTools.INITIAL_AUTO;
+    }
+
+    public void reset() {
+        GameTools nextState = resetState();
+        Robot.elevator.setTargetHeight(nextState.elevator);
+        Robot.switcher.moveSwitch(nextState.switcher);
+        Robot.flower.setFlowerIO(nextState.io);
+        Robot.flower.setFlowerBud(nextState.bud);
+        currentState = nextState;
+        System.out.println(currentState);
+    }
+    GameTools resetState() {
+        return GameTools.INITIAL;
+    }
+    public void autonomousReset() {
+        GameTools nextState = autonomousResetState();
+        Robot.elevator.setTargetHeight(nextState.elevator);
+        Robot.switcher.moveSwitch(nextState.switcher);
+        Robot.flower.setFlowerIO(nextState.io);
+        Robot.flower.setFlowerBud(nextState.bud);
+        currentState = nextState;
+        System.out.println(currentState);
+    }
+    GameTools autonomousResetState() {
+        return GameTools.INITIAL_AUTO;
     }
     
     public void increment() {
@@ -38,6 +63,8 @@ public class GameToolStateMachine {
         switch(currentState) {
             case INITIAL:
                 return GameTools.CARGO1;
+            case INITIAL_AUTO:
+                return GameTools.HATCH1F;
             case CARGO1:
                 return GameTools.CARGO2;
             case CARGO2:
@@ -151,7 +178,8 @@ public class GameToolStateMachine {
     }
 
     public static enum GameTools {
-        INITIAL(Height.GROUND, Position.FLOOR, FlowerBud.BUD, FlowerIO.IN),
+        INITIAL(Height.GROUND, Position.FLOOR, FlowerBud.BUD, FlowerIO.IN), 
+        INITIAL_AUTO(Height.GROUND, Position.HATCH, FlowerBud.FLOWER, FlowerIO.IN), //Initial state for auto (we think)
         CARGO1(Height.GROUND, Position.CARGO, FlowerBud.BUD, FlowerIO.IN),
         CARGO2(Height.LEVEL1B, Position.CARGO, FlowerBud.BUD, FlowerIO.IN),
         CARGO3(Height.LEVEL2B, Position.CARGO, FlowerBud.BUD, FlowerIO.IN),

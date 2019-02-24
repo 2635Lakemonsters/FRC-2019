@@ -15,6 +15,7 @@ import java.util.Map;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import frc.robot.commands.GameToolIncrementCommand;
 import frc.robot.commands.PathCommand;
 
 /**
@@ -27,6 +28,9 @@ public class AutonomousLibrary {
         CommandGroup output = new CommandGroup();
 
         PathCommand pathCmd = new PathCommand("CenterLeftToCargoLeft", false);
+        GameToolIncrementCommand increment = new GameToolIncrementCommand();
+
+        output.addSequential(increment);
         output.addSequential(pathCmd);
 
         return output;

@@ -202,6 +202,7 @@ boolean autoHappened = false;
     //---------------------------------------------
     
     m_autonomousCommand = m_chooser.getSelected();
+    gameToolStateMachine.autonomousReset();
     
 
     //drive.motionMagic("aaa");
