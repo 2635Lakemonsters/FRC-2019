@@ -10,7 +10,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.subsystems.Switcher;
-import frc.robot.subsystems.Switcher.Position;
+import frc.robot.subsystems.Switcher.SwitcherState;
 
 public class SwitcherUpCommand extends Command {
   public SwitcherUpCommand() {
@@ -23,10 +23,10 @@ public class SwitcherUpCommand extends Command {
   @Override
   protected void initialize() {
     //Robot.switcher.moveSwitch(Switcher.Position.CARGO);
-    Position nextPosition = Robot.switcher.getNextPosition();
+    SwitcherState nextPosition = Robot.switcher.getNextPosition();
     //System.out.println("switcherupcommand init");
     Robot.switcher.moveSwitch(nextPosition);
-    if(nextPosition == Position.HATCH){
+    if(nextPosition == SwitcherState.HATCH){
       Robot.elevator.setTargetHeight(Robot.elevator.getSwappedState());
     }
   }

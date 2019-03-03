@@ -5,7 +5,7 @@ import frc.robot.RobotMap;
 import frc.robot.commands.ElevatorCommand;
 //import frc.robot.commands.EmptyCommand;
 import frc.robot.subsystems.Elevator.Height;
-import frc.robot.subsystems.Switcher.Position;
+import frc.robot.subsystems.Switcher.SwitcherState;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -140,8 +140,8 @@ public class Elevator extends Subsystem {
 			//largeMotor1.set(ControlMode.MotionMagic, upperHeight);
 			//smallMotor.set(ControlMode.MotionMagic, lowerHeight);
 
-			largeController.setReference(upperHeight, ControlType.kPosition);
-			smallController.setReference(lowerHeight, ControlType.kPosition);
+			largeController.setReference(-upperHeight, ControlType.kPosition);
+			smallController.setReference(-lowerHeight, ControlType.kPosition);
 			
 		}
 		
@@ -204,7 +204,7 @@ public class Elevator extends Subsystem {
 		// smallMotor.config_kF(0, 0, 0);
 		
 		smallEncoder.setPosition(0);
-		smallController.setP(5);
+		smallController.setP(0.1);
 		smallController.setI(0);
 		smallController.setD(0);
 		smallController.setFF(0);
@@ -216,7 +216,7 @@ public class Elevator extends Subsystem {
 		// largeMotor1.config_kF(0, 0, 0);
 
 		largeEncoder.setPosition(0);
-		largeController.setP(5);
+		largeController.setP(0.1);
 		largeController.setI(0);
 		largeController.setD(0);
 		largeController.setFF(0);
@@ -226,7 +226,12 @@ public class Elevator extends Subsystem {
     	// smallMotor.selectProfileSlot(0, 0);
     	
     	// largeMotor1.configMotionAcceleration(RobotMap.ELEVATOR_ACCELERATION, 0);
-    	// smallMotor.configMotionAcceleration(RobotMap.ELEVATOR_ACCELERATION, 0);
+		// smallMotor.configMotionAcceleration(RobotMap.ELEVATOR_ACCELERATION, 0);
+		// largeController.setSmartMotionMaxAccel(maxAccel, 0);
+		// smallController.setSmartMotionMaxAccel(maxAccel, 0);
+
+		// largeController.setSmartMotionMaxVelocity(maxVel, 0);
+		// smallController.setSmartMotionMaxVelocity(maxVel, 0);
     	
     	// largeMotor1.configMotionCruiseVelocity(RobotMap.ELEVATOR_VELOCITY, 0);
 		// smallMotor.configMotionCruiseVelocity(RobotMap.ELEVATOR_VELOCITY, 0);
@@ -263,7 +268,7 @@ public class Elevator extends Subsystem {
 	public Height getUpperHeight(){
 		switch(currentTargetHeight){
 			case GROUND:
-				if(Robot.switcher.currentPosition == Position.HATCH){
+				if(Robot.switcher.currentSwitcherState == SwitcherState.HATCH){
 					return Height.LEVEL1H;
 				}else {
 					return Height.LEVEL1B;

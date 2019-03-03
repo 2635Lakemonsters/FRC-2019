@@ -31,10 +31,10 @@ public class Climber extends Subsystem {
   public int COMMAND_GROUP_STAGE = 0;
 
   public Climber() {
-    FRExtender = new WPI_TalonSRX(0);
-    FLExtender = new WPI_TalonSRX(0);
-    BExtender = new WPI_TalonSRX(0);
-    BackDriveMotor = new WPI_TalonSRX(0);
+    FRExtender = new WPI_TalonSRX(RobotMap.FRONT_RIGHT_EXTENDER_CHANNEL);
+    FLExtender = new WPI_TalonSRX(RobotMap.FRONT_LEFT_EXTENDER_CHANNEL);
+    BExtender = new WPI_TalonSRX(RobotMap.BACK_EXTENDER_CHANNEL);
+    BackDriveMotor = new WPI_TalonSRX(RobotMap.BACK_EXTENDER_DRIVE_CHANNEL);
 
     FRExtender.config_kP(0, 0);
     FRExtender.config_kI(0, 0);

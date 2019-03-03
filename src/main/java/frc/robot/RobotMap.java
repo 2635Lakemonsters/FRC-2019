@@ -32,6 +32,14 @@ public class RobotMap {
   public static int BACK_LEFT_MOTOR_CHANNEL = 4;
   public static int SWITCH_MOTOR_CHANNEL = 7;
 
+  public static int LEFT_INTAKE_MOTOR_CHANNEL = 8;
+  public static int RIGHT_INTAKE_MOTOR_CHANNEL = 9;
+
+  public static int FRONT_LEFT_EXTENDER_CHANNEL = 10;
+  public static int FRONT_RIGHT_EXTENDER_CHANNEL = 11;
+  public static int BACK_EXTENDER_CHANNEL = 12;
+  public static int BACK_EXTENDER_DRIVE_CHANNEL = 13;
+
   public static int S_PATH_LEFT_BUTTON = 8;
   public static int EXTENDER_BUTTON = 3;
   //public static int LEFT_FLOWER_BUTTON = 1;
@@ -48,7 +56,7 @@ public class RobotMap {
 
   //--------EXPERIMENTAL PATHWEAVER CONSTANTS------------
   // public static final int k_ticks_per_rev = 4096/*/3*/;//2018 Comp Bot
-  public static final int k_ticks_per_rev = 307; //42*7.31
+  public static final double k_ticks_per_rev = 42*7.31;
   public static final double k_wheel_diameter = 0.49; //feet!
   public static final double k_max_velocity = 10.0;
 
@@ -64,12 +72,12 @@ public class RobotMap {
   public static final int k_gyro_port = 0;
 
   /* Elevator Values */
-  public static final int ELEVATOR_TOLERANCE = 2000;
-  public static final int ELEVATOR_UPPER_MOTOR_CHANNEL = 0;
-  public static final int ELEVATOR_LOWER_MOTOR1_CHANNEL = 0;
-  public static final int SMALL_ELEVATOR_MAX = 20000;
-  public static final int ELEVATOR_ACCELERATION = 5000;
-  public static final int ELEVATOR_VELOCITY = 3000;
+  public static final int ELEVATOR_TOLERANCE = 1;
+  public static final int ELEVATOR_UPPER_MOTOR_CHANNEL = 6;
+  public static final int ELEVATOR_LOWER_MOTOR1_CHANNEL = 5;
+  public static final int SMALL_ELEVATOR_MAX = 90;
+  // public static final int ELEVATOR_ACCELERATION = 5000;
+  // public static final int ELEVATOR_VELOCITY = 3000;
   public static final int ELEVATOR_GROUND_LOWER_HEIGHT = 0;
   public static final int ELEVATOR_EXCHANGE_LOWER_HEIGHT = 0;
   public static final int ELEVATOR_STACK_LOWER_HEIGHT = 0;
@@ -78,18 +86,18 @@ public class RobotMap {
   public static final int ELEVATOR_CLIMB_LOWER_HEIGHT = 0;
 
   public static final int ELEVATOR_GROUND_HEIGHT = 0;
-  public static final int ELEVATOR_LEVEL1_HATCH_HEIGHT = 0;
-  public static final int ELEVATOR_LEVEL1_BALL_HEIGHT = 0;
-  public static final int ELEVATOR_LEVEL2_HATCH_HEIGHT = 0;
-  public static final int ELEVATOR_LEVEL2_BALL_HEIGHT = 0;
-  public static final int ELEVATOR_LEVEL3_HATCH_HEIGHT = 0;
-  public static final int ELEVATOR_LEVEL3_BALL_HEIGHT = 0;
+  public static final int ELEVATOR_LEVEL1_HATCH_HEIGHT = 30;
+  public static final int ELEVATOR_LEVEL1_BALL_HEIGHT = 60;
+  public static final int ELEVATOR_LEVEL2_HATCH_HEIGHT = 90;
+  public static final int ELEVATOR_LEVEL2_BALL_HEIGHT = 120;
+  public static final int ELEVATOR_LEVEL3_HATCH_HEIGHT = 150;
+  public static final int ELEVATOR_LEVEL3_BALL_HEIGHT = 180;
 
   //public static final String k_path_name = "example";
   //------------------------------------------------------
   public static final int SWITCHER_FLOOR = 0;
-  public static final int SWITCHER_CARGO = 1;
-  public static final int SWITCHER_HATCH = 2;
-  public static final int SWITCHER_REAR = 3;
+  public static final int SWITCHER_CARGO = 0;
+  public static final int SWITCHER_HATCH = 3;
+  public static final int SWITCHER_REAR = 5;
   
 }

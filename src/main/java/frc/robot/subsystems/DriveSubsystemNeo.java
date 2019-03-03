@@ -59,9 +59,6 @@ public class DriveSubsystemNeo extends Subsystem {
   public CANEncoder FREncoder;
   public CANEncoder FLEncoder;
 
-  public double FRinitialEncoderPosition;
-  public double FLinitialEncoderPosition;
-
   public boolean isReversed = false;
 
   public long startTime;
@@ -95,6 +92,11 @@ public class DriveSubsystemNeo extends Subsystem {
     FLMotor = new CANSparkMax(RobotMap.FRONT_LEFT_MOTOR_CHANNEL, MotorType.kBrushless);
     BLMotor = new CANSparkMax(RobotMap.BACK_LEFT_MOTOR_CHANNEL, MotorType.kBrushless);
 
+    FLMotor.restoreFactoryDefaults();
+    FRMotor.restoreFactoryDefaults();
+    BLMotor.restoreFactoryDefaults();
+    BRMotor.restoreFactoryDefaults();
+
     FREncoder = new CANEncoder(FRMotor);
     FLEncoder = new CANEncoder(FLMotor);
     
@@ -114,6 +116,7 @@ public class DriveSubsystemNeo extends Subsystem {
     // m_left_encoder = new Encoder();
     // m_right_encoder = new Encoder();
     m_gyro = new AHRS(I2C.Port.kMXP);
+    
     
     //m_gyro = new AnalogGyro(RobotMap.k_gyro_port);
     //-------------------------------------------
@@ -149,15 +152,19 @@ public class DriveSubsystemNeo extends Subsystem {
     double tempLeft;
 		double absleft = Math.abs(left);
 		double absright = Math.abs(right);
-    if(absleft<0.05) 
+    if(absleft < 0.05) {
+      System.out.println("Setting left to zero!!!!! ");
       left = 0;
-    if(absright<0.05) 
+    }
+    if(absright < 0.05) { 
+      System.out.println("Setting Right to zero!!!!! ");
       right = 0;
-    if(getReverse()) {
-      tempLeft = right;
-      right = -left;
-      left = -tempLeft;
-    } 
+    }
+    // if(getReverse()) {
+    //   tempLeft = right;
+    //   right = -left;
+    //   left = -tempLeft;
+    // } 
     FRMotor.set(-right);
     FLMotor.set(left);
     //System.out.println("Left: " + FLMotor.getSelectedSensorPosition());
@@ -167,10 +174,8 @@ public class DriveSubsystemNeo extends Subsystem {
   //---------EXPERIMENTAL PATH WEAVER CODE-----------
   
   public void encoderReset() {
-    this.FRinitialEncoderPosition = FREncoder.getPosition();
-    System.out.println("Switcher intitial FREncoder position: " + FRinitialEncoderPosition);
-    this.FLinitialEncoderPosition = FLEncoder.getPosition();
-    System.out.println("Switcher intitial FREncoder position: " + FLinitialEncoderPosition);
+    FREncoder.setPosition(0);
+    FLEncoder.setPosition(0);
   }
 
   public boolean PathAutoInit(String pathname) {
@@ -206,15 +211,20 @@ public class DriveSubsystemNeo extends Subsystem {
     m_left_follower = new EncoderFollower(left_trajectory);
     m_right_follower = new EncoderFollower(right_trajectory);
 
-    m_left_follower.configureEncoder((int) FLEncoder.getPosition(), RobotMap.k_ticks_per_rev, RobotMap.k_wheel_diameter);
+    int leftPosInTicks = (int) (FLEncoder.getPosition()*RobotMap.k_ticks_per_rev);
+    int rightPosInTicks = (int) (FREncoder.getPosition()*RobotMap.k_ticks_per_rev);
+
+    m_left_follower.configureEncoder(leftPosInTicks, (int) RobotMap.k_ticks_per_rev, RobotMap.k_wheel_diameter);
     // You must tune the PID values on the following line!
     //m_left_follower.configurePIDVA(0.1, 0.0, 0.25, 1 / RobotMap.k_max_velocity, 0); //1 / RobotMap.k_max_velocity
-    m_left_follower.configurePIDVA(0.2, 0.0, 0.08, 0.075, 0.045); //1 / RobotMap.k_max_velocity
+    //m_left_follower.configurePIDVA(0.2, 0.0, 0.08, 0.075, 0.045); //1 / RobotMap.k_max_velocity
+    m_left_follower.configurePIDVA(0.1, 0.0, 0.0, 0.0, 0.0);
 
-    m_right_follower.configureEncoder((int) FREncoder.getPosition(), RobotMap.k_ticks_per_rev, RobotMap.k_wheel_diameter);
+    m_right_follower.configureEncoder(rightPosInTicks, (int) RobotMap.k_ticks_per_rev, RobotMap.k_wheel_diameter);
     // You must tune the PID values on the following line!
     //m_right_follower.configurePIDVA(0.1, 0.0, 0.25, 1 / RobotMap.k_max_velocity, 0);
-    m_right_follower.configurePIDVA(0.2, 0.0, 0.08,0.075, 0.045);
+    //m_right_follower.configurePIDVA(0.2, 0.0, 0.08,0.075, 0.045);
+    m_right_follower.configurePIDVA(0.1, 0.0, 0.0,0.0, 0.0);
     m_gyro.reset();
     
     m_follower_notifier = new Notifier(this::followPath);
@@ -223,12 +233,18 @@ public class DriveSubsystemNeo extends Subsystem {
   }
 
   public void followPath() {
+    int leftPosInTicks = (int) (FLEncoder.getPosition()*RobotMap.k_ticks_per_rev);
+    int rightPosInTicks = (int) (FREncoder.getPosition()*RobotMap.k_ticks_per_rev);
+    
     if (m_left_follower.isFinished() || m_right_follower.isFinished()) {
       endPath();
-    } else {
-      double left_speed = m_left_follower.calculate((int) FLEncoder.getPosition());
-      double right_speed = m_right_follower.calculate((int) FREncoder.getPosition());
+    } else {  
+
+      double left_speed = m_left_follower.calculate(leftPosInTicks);
+      double right_speed = m_right_follower.calculate(rightPosInTicks);
       
+      //System.out.println("Left Encoder pos: " + leftPosInTicks + " Right Encoder pos: " + rightPosInTicks);
+
       //double heading = m_gyro.getAngle();
       double heading = getGyroAngle();
       double desired_heading;
@@ -245,13 +261,14 @@ public class DriveSubsystemNeo extends Subsystem {
          //FRMotor.set(ControlMode.PercentOutput, -(right_speed + turn) );
          //FLMotor.set(ControlMode.PercentOutput, left_speed - turn);
          tankDrive(left_speed + turn, (right_speed - turn));
+        // tankDrive(right_speed + turn, (right_speed - turn));
       // }else{
       //   FRMotor.set(ControlMode.PercentOutput, (right_speed + turn) );
       //   FLMotor.set(ControlMode.PercentOutput, -(left_speed - turn));
       // }
       // //System.out.println("Controller Position: " + right_speed + " Left: " + left_speed);
       //System.out.println("Gyro heading: " + heading + " Heading Diff: " + heading_difference);
-      //System.out.println(left_speed);
+     // System.out.println("left Speed: " + left_speed + " Right Speed: " + right_speed);
       
     }
   }

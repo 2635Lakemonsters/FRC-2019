@@ -9,11 +9,11 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
-import frc.robot.subsystems.Switcher.Position;
+import frc.robot.subsystems.Switcher.SwitcherState;
 
 public class SwitcherTargetCommand extends Command {
-  Position targetPosition;
-  public SwitcherTargetCommand(Position targetPosition) {
+  SwitcherState targetPosition;
+  public SwitcherTargetCommand(SwitcherState targetPosition) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     this.targetPosition = targetPosition;

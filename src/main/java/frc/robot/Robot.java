@@ -36,7 +36,7 @@ import frc.robot.model.GameToolStateMachine;
 public class Robot extends TimedRobot {
   public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
   public static OI oi;
-  public static DriveSubsystem driveSubsystem;
+  public static DriveSubsystemNeo driveSubsystem;
   public static Elevator elevator;
   public static Flower flower;
   public static Switcher switcher;
@@ -60,6 +60,7 @@ public class Robot extends TimedRobot {
   public static ClimbCommandGroup climbCommandGroup;
   ClimbCancelCommand climbCancelCommand;
   ElevatorControl elevatorControl;
+  SwitcherControl switchControl;
   CargoOutCommand cargoOutCommand;
   CargoInCommand cargoInCommand;
   
@@ -76,7 +77,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     
     oi = new OI();
-    driveSubsystem = new DriveSubsystem();
+    driveSubsystem = new DriveSubsystemNeo();
     elevator = new Elevator();
     flower = new Flower();
     switcher = new Switcher();
@@ -85,8 +86,6 @@ public class Robot extends TimedRobot {
     fms = new FMS();
     cargo = new Cargo();
 
-    SPARK = new CANSparkMax(7, MotorType.kBrushless);
-    SPARK.restoreFactoryDefaults();
 
     driveCommand = new DriveCommand();
     extenderCommand = new ToggleFlowerExtendCommand();
@@ -101,6 +100,7 @@ public class Robot extends TimedRobot {
     gameToolFlowerCommand = new GameToolFlowerCommand();
     climbCommandGroup = new ClimbCommandGroup();
     elevatorControl = new ElevatorControl();
+    switchControl = new SwitcherControl();
     cargoOutCommand = new CargoOutCommand();
     cargoInCommand = new CargoInCommand();
     
@@ -110,10 +110,10 @@ public class Robot extends TimedRobot {
     //oi.grabberExtendButton.whenPressed(extenderCommand);
     //oi.flowerButtonL.whenPressed(flowerCommand);
     //oi.flowerButtonR.whenPressed(flowerCommand);
-    oi.reverseButton.whenPressed(reverseCommand);
+    //oi.reverseButton.whenPressed(reverseCommand);
     oi.encoderResetButton.whenPressed(encoderResetCommand);
-    //oi.switcherUpButton.whenPressed(switcherUpCommand);
-    //oi.switcherDownButton.whenPressed(switcherDownCommand);
+    oi.switcherUpButton.whenPressed(switcherUpCommand);
+    oi.switcherDownButton.whenPressed(switcherDownCommand);
     oi.gameToolIncrementButton.whenPressed(gameToolIncrementCommand);
     oi.gameToolDecrementButton.whenPressed(gameToolDecrementCommand);
     oi.gameToolSwapButton.whenPressed(gameToolSwapCommand);
@@ -122,7 +122,7 @@ public class Robot extends TimedRobot {
     oi.climbButton.whenPressed(climbCommandGroup);
     oi.climbCancelButton.whenPressed(climbCancelCommand);
     oi.cargoInButton.whileHeld(cargoInCommand);
-    oi.cargoOutButton.whileHeld(cargoOutCommand);
+    oi.cargoOutButton.toggleWhenPressed(cargoOutCommand);
     
   }
 
@@ -202,7 +202,7 @@ boolean autoHappened = false;
     //---------------------------------------------
     
     m_autonomousCommand = m_chooser.getSelected();
-    gameToolStateMachine.autonomousReset();
+    //gameToolStateMachine.autonomousReset();
     
 
     //drive.motionMagic("aaa");
@@ -218,10 +218,11 @@ boolean autoHappened = false;
     if (m_autonomousCommand != null) {
       m_autonomousCommand.start();
       }
-    driveSubsystem.bullyOff();
+    //driveSubsystem.bullyOff();
     autoHappened = true;
-    elevator.encoderStart();
-		elevatorControl.start();
+    //elevator.encoderStart();
+    //elevatorControl.start();
+    //switchControl.start();
   }
 
   /**
@@ -238,6 +239,7 @@ boolean autoHappened = false;
   public void teleopInit() {
     
     driveSubsystem.setReverse(false);
+    gameToolStateMachine.reset();
 
 		if (driveCommand != null) {
 			driveCommand.start();
@@ -262,7 +264,8 @@ boolean autoHappened = false;
     if(!autoHappened){
       //elevator.encoderStart();
     }
-		//elevatorControl.start();
+    elevatorControl.start();
+    switchControl.start();
 
   }
 

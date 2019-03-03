@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.RobotMap;
 
 /**
  * Add your docs here.
@@ -28,8 +29,8 @@ public class Cargo extends Subsystem {
   WPI_TalonSRX rightMotor;
 
   public Cargo(){
-    leftMotor = new WPI_TalonSRX(9);
-    rightMotor = new WPI_TalonSRX(8);
+    leftMotor = new WPI_TalonSRX(RobotMap.LEFT_INTAKE_MOTOR_CHANNEL);
+    rightMotor = new WPI_TalonSRX(RobotMap.RIGHT_INTAKE_MOTOR_CHANNEL);
   }
 
   public void cargoOut(){

@@ -56,7 +56,7 @@ public class EncoderResetCommand extends TimedCommand {
   protected void end() {
     // shutdown motor and reset encoder
     Robot.driveSubsystem.tankDrive(0,0);
-    Robot.driveSubsystem.FRMotor.setSelectedSensorPosition(0, 0, 0);
+    Robot.driveSubsystem.encoderReset();
   }
 
   protected boolean isFinished() {

@@ -27,7 +27,7 @@ public class Switcher extends Subsystem {
   public CANSparkMax switchMotor;
   public CANPIDController controller;
   CANEncoder encoder;
-  public Position currentPosition;
+  public SwitcherState currentSwitcherState;
   double initialEncoderPosition;
   double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
 
@@ -35,7 +35,7 @@ public class Switcher extends Subsystem {
     switchMotor = new CANSparkMax(RobotMap.SWITCH_MOTOR_CHANNEL, MotorType.kBrushless);
     controller = new CANPIDController(switchMotor);
     encoder = new CANEncoder(switchMotor);
-    currentPosition = Position.FLOOR;
+    currentSwitcherState = SwitcherState.FLOOR;
     encoderStart();
     //Does this effectively reset the encoder???
     //switchMotor.setParameter(ConfigParameter.kEncoderSampleDelta, 0);
@@ -43,7 +43,7 @@ public class Switcher extends Subsystem {
   public void encoderStart() {
     
     // PID coefficients
-     kP = 0.1; 
+     kP = 0.3; 
      //kI = 1e-4;
      //kD = 1; 
      kI = 0.0;
@@ -56,26 +56,26 @@ public class Switcher extends Subsystem {
     controller.setP(kP);
     controller.setI(kI);
     controller.setD(kD);
-    controller.setIZone(kIz);
-    controller.setFF(kFF);
-    controller.setOutputRange(kMinOutput, kMaxOutput);
+    // controller.setIZone(kIz);
+    // controller.setFF(kFF);
+    // controller.setOutputRange(kMinOutput, kMaxOutput);
 
   }
 
   public void encoderReset() {
-    this.initialEncoderPosition = encoder.getPosition();
-    System.out.println("Switcher intitial encoder position: " + initialEncoderPosition);
-    this.currentPosition = Position.FLOOR;
+    encoder.setPosition(0);
+    this.currentSwitcherState = SwitcherState.FLOOR;
   }
 
-  public void moveSwitch(Position setPoint) {
+  public void moveSwitch(SwitcherState setPoint) {
     //LOGIC HEAR FOR WHEN ABLE TO GO TO WHAT STATE
     //if elevator at top, may go to rear
     //if elevator at bottom, may not change state
     //Probably only go to floor level if elevator at bottom
-    System.out.println("Switcher.moveSwitch");
-    controller.setReference(setPoint.position+initialEncoderPosition, ControlType.kPosition);
-    this.currentPosition = setPoint;
+    System.out.println("Switcher.moveSwitch to " + setPoint.switcherEncoderPosition);
+    //System.out.println("Switcher.moveSwitch to " + setPoint.switcherEncoderPosition);
+    controller.setReference(setPoint.switcherEncoderPosition, ControlType.kPosition);
+    this.currentSwitcherState = setPoint;
     // if(Robot.elevator.currentTargetHeight == Height.GROUND){
     //   if((setPoint == Position.FLOOR && currentPosition == Position.CARGO) || (setPoint == Position.CARGO && currentPosition == Position.FLOOR)){
     //     controller.setReference(setPoint.position+initialEncoderPosition, ControlType.kPosition);
@@ -94,52 +94,62 @@ public class Switcher extends Subsystem {
     // }
   }
   
+	public void motorControl() {
+    //System.out.println(currentTargetHeight.toString());
+    
+      //System.out.println("Target: " + currentSwitcherState.switcherEncoderPosition + " Current: " + encoder.getPosition());
+      controller.setReference(currentSwitcherState.switcherEncoderPosition, ControlType.kPosition);
+        
+      
+  
+    }
+
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
   }
 
-  public static enum Position {
+  public static enum SwitcherState {
     FLOOR(RobotMap.SWITCHER_FLOOR),
     CARGO(RobotMap.SWITCHER_CARGO),
     HATCH(RobotMap.SWITCHER_HATCH),
     REAR(RobotMap.SWITCHER_REAR);
 
-    public double position;
-    private Position(double position) {
-      this.position = position;
+    public double switcherEncoderPosition;
+    private SwitcherState(double position) {
+      this.switcherEncoderPosition = position;
     }
   }
 
-  public Position getNextPosition(){
+  public SwitcherState getNextPosition(){
     //System.out.println("Switcher.getNextPosition");
-    switch(currentPosition){
+    switch(currentSwitcherState){
       case FLOOR:
-        return Position.CARGO;
+        return SwitcherState.CARGO;
       case CARGO:
-        return Position.HATCH;
+        return SwitcherState.HATCH;
       case HATCH:
-        return Position.REAR;
+        return SwitcherState.REAR;
       case REAR:
-        return Position.REAR;
+        return SwitcherState.REAR;
       default:
-        return Position.FLOOR;
+        return SwitcherState.FLOOR;
     }
   }
 
-  public Position getPrevPosition(){
-    switch(currentPosition){
+  public SwitcherState getPrevPosition(){
+    switch(currentSwitcherState){
       case FLOOR:
-        return Position.FLOOR;
+        return SwitcherState.FLOOR;
       case CARGO:
-        return Position.FLOOR;
+        return SwitcherState.FLOOR;
       case HATCH:
-        return Position.CARGO;
+        return SwitcherState.CARGO;
       case REAR:
-        return Position.HATCH;
+        return SwitcherState.HATCH;
       default:
-        return Position.FLOOR;
+        return SwitcherState.FLOOR;
     }
   }
 }

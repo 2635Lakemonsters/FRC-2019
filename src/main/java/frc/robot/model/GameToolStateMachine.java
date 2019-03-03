@@ -8,7 +8,7 @@
 package frc.robot.model;
 
 import frc.robot.subsystems.Elevator.Height;
-import frc.robot.subsystems.Switcher.Position;
+import frc.robot.subsystems.Switcher.SwitcherState;
 import frc.robot.subsystems.Flower.FlowerBud;
 import frc.robot.subsystems.Flower.FlowerIO;
 import frc.robot.Robot;
@@ -178,24 +178,24 @@ public class GameToolStateMachine {
     }
 
     public static enum GameTools {
-        INITIAL(Height.GROUND, Position.FLOOR, FlowerBud.BUD, FlowerIO.IN), 
-        INITIAL_AUTO(Height.GROUND, Position.HATCH, FlowerBud.FLOWER, FlowerIO.IN), //Initial state for auto (we think)
-        CARGO1(Height.GROUND, Position.CARGO, FlowerBud.BUD, FlowerIO.IN),
-        CARGO2(Height.LEVEL1B, Position.CARGO, FlowerBud.BUD, FlowerIO.IN),
-        CARGO3(Height.LEVEL2B, Position.CARGO, FlowerBud.BUD, FlowerIO.IN),
-        CARGO4(Height.LEVEL3B, Position.REAR, FlowerBud.BUD, FlowerIO.IN),
-        HATCH1B(Height.LEVEL1H, Position.HATCH, FlowerBud.BUD, FlowerIO.OUT),
-        HATCH2B(Height.LEVEL2H, Position.HATCH, FlowerBud.BUD, FlowerIO.OUT),
-        HATCH3B(Height.LEVEL3H, Position.HATCH, FlowerBud.BUD, FlowerIO.OUT),
-        HATCH1F(Height.LEVEL1H, Position.HATCH, FlowerBud.FLOWER, FlowerIO.OUT),
-        HATCH2F(Height.LEVEL2H, Position.HATCH, FlowerBud.FLOWER, FlowerIO.OUT),
-        HATCH3F(Height.LEVEL3H, Position.HATCH, FlowerBud.FLOWER, FlowerIO.OUT);
+        INITIAL(Height.GROUND, SwitcherState.FLOOR, FlowerBud.BUD, FlowerIO.IN), 
+        INITIAL_AUTO(Height.GROUND, SwitcherState.HATCH, FlowerBud.FLOWER, FlowerIO.IN), //Initial state for auto (we think)
+        CARGO1(Height.GROUND, SwitcherState.CARGO, FlowerBud.BUD, FlowerIO.IN),
+        CARGO2(Height.LEVEL1B, SwitcherState.CARGO, FlowerBud.BUD, FlowerIO.IN),
+        CARGO3(Height.LEVEL2B, SwitcherState.CARGO, FlowerBud.BUD, FlowerIO.IN),
+        CARGO4(Height.LEVEL3B, SwitcherState.REAR, FlowerBud.BUD, FlowerIO.IN),
+        HATCH1B(Height.LEVEL1H, SwitcherState.HATCH, FlowerBud.BUD, FlowerIO.OUT),
+        HATCH2B(Height.LEVEL2H, SwitcherState.HATCH, FlowerBud.BUD, FlowerIO.OUT),
+        HATCH3B(Height.LEVEL3H, SwitcherState.HATCH, FlowerBud.BUD, FlowerIO.OUT),
+        HATCH1F(Height.LEVEL1H, SwitcherState.HATCH, FlowerBud.FLOWER, FlowerIO.OUT),
+        HATCH2F(Height.LEVEL2H, SwitcherState.HATCH, FlowerBud.FLOWER, FlowerIO.OUT),
+        HATCH3F(Height.LEVEL3H, SwitcherState.HATCH, FlowerBud.FLOWER, FlowerIO.OUT);
 
         public Height elevator;
-        public Position switcher;
+        public SwitcherState switcher;
         public FlowerBud bud;
         public FlowerIO io;
-        private GameTools(Height elevator, Position switcher, FlowerBud bud, FlowerIO io) {
+        private GameTools(Height elevator, SwitcherState switcher, FlowerBud bud, FlowerIO io) {
             this.elevator = elevator;
             this.switcher = switcher;
             this.bud = bud;
