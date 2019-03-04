@@ -153,11 +153,11 @@ public class DriveSubsystemNeo extends Subsystem {
 		double absleft = Math.abs(left);
 		double absright = Math.abs(right);
     if(absleft < 0.05) {
-      System.out.println("Setting left to zero!!!!! ");
+      //System.out.println("Setting left to zero!!!!! ");
       left = 0;
     }
     if(absright < 0.05) { 
-      System.out.println("Setting Right to zero!!!!! ");
+      //System.out.println("Setting Right to zero!!!!! ");
       right = 0;
     }
     // if(getReverse()) {
@@ -211,20 +211,22 @@ public class DriveSubsystemNeo extends Subsystem {
     m_left_follower = new EncoderFollower(left_trajectory);
     m_right_follower = new EncoderFollower(right_trajectory);
 
-    int leftPosInTicks = (int) (FLEncoder.getPosition()*RobotMap.k_ticks_per_rev);
-    int rightPosInTicks = (int) (FREncoder.getPosition()*RobotMap.k_ticks_per_rev);
+    int leftPosInTicks = (int) (FLEncoder.getPosition()*RobotMap.k_ticks_per_motor_rev);
+    int rightPosInTicks = (int) (-FREncoder.getPosition()*RobotMap.k_ticks_per_motor_rev);
 
-    m_left_follower.configureEncoder(leftPosInTicks, (int) RobotMap.k_ticks_per_rev, RobotMap.k_wheel_diameter);
+    m_left_follower.configureEncoder(leftPosInTicks, (int) RobotMap.k_ticks_per_wheel_rev, RobotMap.k_wheel_diameter);
     // You must tune the PID values on the following line!
     //m_left_follower.configurePIDVA(0.1, 0.0, 0.25, 1 / RobotMap.k_max_velocity, 0); //1 / RobotMap.k_max_velocity
     //m_left_follower.configurePIDVA(0.2, 0.0, 0.08, 0.075, 0.045); //1 / RobotMap.k_max_velocity
-    m_left_follower.configurePIDVA(0.1, 0.0, 0.0, 0.0, 0.0);
+    //m_left_follower.configurePIDVA(0.03, 0.0, 0.0, 0.07, 0.04);
+    m_left_follower.configurePIDVA(0.05, 0.0, 0.0, 0.06, 0.03);
 
-    m_right_follower.configureEncoder(rightPosInTicks, (int) RobotMap.k_ticks_per_rev, RobotMap.k_wheel_diameter);
+    m_right_follower.configureEncoder(rightPosInTicks, (int) RobotMap.k_ticks_per_wheel_rev, RobotMap.k_wheel_diameter);
     // You must tune the PID values on the following line!
     //m_right_follower.configurePIDVA(0.1, 0.0, 0.25, 1 / RobotMap.k_max_velocity, 0);
     //m_right_follower.configurePIDVA(0.2, 0.0, 0.08,0.075, 0.045);
-    m_right_follower.configurePIDVA(0.1, 0.0, 0.0,0.0, 0.0);
+    //m_right_follower.configurePIDVA(0.03, 0.0, 0.0, 0.07, 0.04);
+    m_right_follower.configurePIDVA(0.05, 0.0, 0.0, 0.06, 0.03);
     m_gyro.reset();
     
     m_follower_notifier = new Notifier(this::followPath);
@@ -233,8 +235,8 @@ public class DriveSubsystemNeo extends Subsystem {
   }
 
   public void followPath() {
-    int leftPosInTicks = (int) (FLEncoder.getPosition()*RobotMap.k_ticks_per_rev);
-    int rightPosInTicks = (int) (FREncoder.getPosition()*RobotMap.k_ticks_per_rev);
+    int leftPosInTicks = (int) (FLEncoder.getPosition()*RobotMap.k_ticks_per_motor_rev);
+    int rightPosInTicks = (int) (-FREncoder.getPosition()*RobotMap.k_ticks_per_motor_rev); //negation is equivalent to changing sensor polarity for right side
     
     if (m_left_follower.isFinished() || m_right_follower.isFinished()) {
       endPath();
@@ -242,9 +244,13 @@ public class DriveSubsystemNeo extends Subsystem {
 
       double left_speed = m_left_follower.calculate(leftPosInTicks);
       double right_speed = m_right_follower.calculate(rightPosInTicks);
+      double distance = rightPosInTicks/RobotMap.k_ticks_per_wheel_rev*RobotMap.k_wheel_diameter*3.14159;
       
-      //System.out.println("Left Encoder pos: " + leftPosInTicks + " Right Encoder pos: " + rightPosInTicks);
-
+      
+      //System.out.println("Left Encoder pos: " + FLEncoder.getPosition() + " left_speed: " + left_speed);
+      //System.out.println("Left Encoder pos: " + leftPosInTicks + " left_speed: " + left_speed);
+      //System.out.println("Right Encoder pos: " + rightPosInTicks + " right_speed: " + right_speed);
+      System.out.println(distance + ", " + right_speed);
       //double heading = m_gyro.getAngle();
       double heading = getGyroAngle();
       double desired_heading;

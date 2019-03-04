@@ -56,7 +56,9 @@ public class RobotMap {
 
   //--------EXPERIMENTAL PATHWEAVER CONSTANTS------------
   // public static final int k_ticks_per_rev = 4096/*/3*/;//2018 Comp Bot
-  public static final double k_ticks_per_rev = 42*7.31;
+  public static final double k_drive_gear_ratio = 7.31;
+  public static final double k_ticks_per_motor_rev = 42.0;
+  public static final double k_ticks_per_wheel_rev = k_ticks_per_motor_rev*k_drive_gear_ratio;
   public static final double k_wheel_diameter = 0.49; //feet!
   public static final double k_max_velocity = 10.0;
 
