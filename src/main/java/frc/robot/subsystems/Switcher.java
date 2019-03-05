@@ -43,7 +43,7 @@ public class Switcher extends Subsystem {
   public void encoderStart() {
     
     // PID coefficients
-     kP = 0.3; 
+     kP = 0.1; 
      //kI = 1e-4;
      //kD = 1; 
      kI = 0.0;
@@ -76,6 +76,7 @@ public class Switcher extends Subsystem {
     //System.out.println("Switcher.moveSwitch to " + setPoint.switcherEncoderPosition);
     controller.setReference(setPoint.switcherEncoderPosition, ControlType.kPosition);
     this.currentSwitcherState = setPoint;
+    System.out.println("Current switcher position: " + encoder.getPosition());
     // if(Robot.elevator.currentTargetHeight == Height.GROUND){
     //   if((setPoint == Position.FLOOR && currentPosition == Position.CARGO) || (setPoint == Position.CARGO && currentPosition == Position.FLOOR)){
     //     controller.setReference(setPoint.position+initialEncoderPosition, ControlType.kPosition);

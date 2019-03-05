@@ -44,7 +44,7 @@ public class RobotMap {
   public static int EXTENDER_BUTTON = 3;
   //public static int LEFT_FLOWER_BUTTON = 1;
   //public static int RIGHT_FLOWER_BUTTON = 1;
-  public static int REVERSE_BUTTON = 2;
+  //public static int REVERSE_BUTTON = 2;
   public static int ENCODER_RESET_BUTTON = 6;
   public static int SWITCHER_UP_BUTTON = 5;
   public static int SWITCHER_DOWN_BUTTON = 4;
@@ -62,6 +62,11 @@ public class RobotMap {
   public static final double k_wheel_diameter = 0.49; //feet!
   public static final double k_max_velocity = 10.0;
 
+  public static final double DRIVE_P_VALUE = 0.3;
+  public static final double DRIVE_I_VALUE = 0.0;
+  public static final double DRIVE_D_VALUE = 0.0;
+  public static final double DRIVE_V_VALUE = 0.054;
+  public static final double DRIVE_A_VALUE = 0.025;
   // public static final int k_left_channel = 0;
   // public static final int k_right_channel = 1;
 
@@ -97,9 +102,9 @@ public class RobotMap {
 
   //public static final String k_path_name = "example";
   //------------------------------------------------------
-  public static final int SWITCHER_FLOOR = 0;
-  public static final int SWITCHER_CARGO = 0;
-  public static final int SWITCHER_HATCH = 3;
-  public static final int SWITCHER_REAR = 5;
+  public static final double SWITCHER_FLOOR = 0;
+  public static final double SWITCHER_CARGO = 0;
+  public static final double SWITCHER_HATCH = 5.5;
+  public static final double SWITCHER_REAR = 7;
   
 }

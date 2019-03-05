@@ -112,13 +112,12 @@ public class Robot extends TimedRobot {
     //oi.flowerButtonR.whenPressed(flowerCommand);
     //oi.reverseButton.whenPressed(reverseCommand);
     oi.encoderResetButton.whenPressed(encoderResetCommand);
-    oi.switcherUpButton.whenPressed(switcherUpCommand);
-    oi.switcherDownButton.whenPressed(switcherDownCommand);
+    //oi.switcherUpButton.whenPressed(switcherUpCommand);
+    //oi.switcherDownButton.whenPressed(switcherDownCommand);
     oi.gameToolIncrementButton.whenPressed(gameToolIncrementCommand);
     oi.gameToolDecrementButton.whenPressed(gameToolDecrementCommand);
     oi.gameToolSwapButton.whenPressed(gameToolSwapCommand);
-    oi.gameToolFlowerButtonL.whenPressed(gameToolFlowerCommand);
-    oi.gameToolFlowerButtonR.whenPressed(gameToolFlowerCommand);
+    oi.gameToolFlowerButton.whenPressed(gameToolFlowerCommand);
     oi.climbButton.whenPressed(climbCommandGroup);
     oi.climbCancelButton.whenPressed(climbCancelCommand);
     oi.cargoInButton.whileHeld(cargoInCommand);
@@ -220,9 +219,9 @@ boolean autoHappened = false;
       }
     //driveSubsystem.bullyOff();
     autoHappened = true;
-    //elevator.encoderStart();
-    //elevatorControl.start();
-    //switchControl.start();
+    elevator.encoderStart();
+    elevatorControl.start();
+    switchControl.start();
   }
 
   /**
@@ -262,7 +261,7 @@ boolean autoHappened = false;
     driveSubsystem.bullyOff();
     boolistatus = false;
     if(!autoHappened){
-      //elevator.encoderStart();
+      elevator.encoderStart();
     }
     elevatorControl.start();
     switchControl.start();

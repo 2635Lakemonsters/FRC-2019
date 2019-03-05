@@ -77,9 +77,13 @@ public class GameToolStateMachine {
                 return GameTools.HATCH2B;
             case HATCH2B:
                 return GameTools.HATCH3B;
+            case HATCH3B:
+                return GameTools.HATCH3B;
             case HATCH1F:
                 return GameTools.HATCH2F;
             case HATCH2F:
+                return GameTools.HATCH3F;
+            case HATCH3F:
                 return GameTools.HATCH3F;
             default:
                 return currentState;
@@ -106,10 +110,14 @@ public class GameToolStateMachine {
                 return GameTools.CARGO2;
             case CARGO4:
                 return GameTools.CARGO3;
+            case HATCH1B:
+                return GameTools.HATCH1B;
             case HATCH2B:
                 return GameTools.HATCH1B;
             case HATCH3B:
                 return GameTools.HATCH2B;
+            case HATCH1F:
+                return GameTools.HATCH1F;
             case HATCH2F:
                 return GameTools.HATCH1F;
             case HATCH3F:
