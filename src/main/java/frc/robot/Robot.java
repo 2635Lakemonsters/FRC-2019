@@ -153,6 +153,8 @@ public void InitChooser() {
    */
   @Override
   public void robotPeriodic() {
+    SmartDashboard.putNumber("Elevator Height", elevator.currentHeight());
+    SmartDashboard.putNumber("Switcher Height", switcher.getCurrentSwitch());
   }
 
   /**

@@ -219,6 +219,7 @@ public class DriveSubsystemNeo extends Subsystem {
     //m_left_follower.configurePIDVA(0.1, 0.0, 0.25, 1 / RobotMap.k_max_velocity, 0); //1 / RobotMap.k_max_velocity
     //m_left_follower.configurePIDVA(0.2, 0.0, 0.08, 0.075, 0.045); //1 / RobotMap.k_max_velocity
     //m_left_follower.configurePIDVA(0.03, 0.0, 0.0, 0.07, 0.04);
+    //m_left_follower.configurePIDVA(0.05, 0.0, 0.0, 0.06, 0.03);
     m_left_follower.configurePIDVA(RobotMap.DRIVE_P_VALUE, RobotMap.DRIVE_I_VALUE, RobotMap.DRIVE_D_VALUE, RobotMap.DRIVE_V_VALUE, RobotMap.DRIVE_A_VALUE);
 
     m_right_follower.configureEncoder(rightPosInTicks, (int) RobotMap.k_ticks_per_wheel_rev, RobotMap.k_wheel_diameter);
@@ -226,6 +227,7 @@ public class DriveSubsystemNeo extends Subsystem {
     //m_right_follower.configurePIDVA(0.1, 0.0, 0.25, 1 / RobotMap.k_max_velocity, 0);
     //m_right_follower.configurePIDVA(0.2, 0.0, 0.08,0.075, 0.045);
     //m_right_follower.configurePIDVA(0.03, 0.0, 0.0, 0.07, 0.04);
+    //m_right_follower.configurePIDVA(0.05, 0.0, 0.0, 0.06, 0.03);
     m_right_follower.configurePIDVA(RobotMap.DRIVE_P_VALUE, RobotMap.DRIVE_I_VALUE, RobotMap.DRIVE_D_VALUE, RobotMap.DRIVE_V_VALUE, RobotMap.DRIVE_A_VALUE);
     m_gyro.reset();
     

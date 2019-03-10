@@ -25,7 +25,7 @@ public class Climber extends Subsystem {
   WPI_TalonSRX BExtender;
   WPI_TalonSRX BackDriveMotor;
 
-  int EXTENDER_HEIGHT = 0;
+  int EXTENDER_HEIGHT = 22000;
 
   //This int will be used to track what stage the climb was cancelled in, and what to do about that cancel
   public int COMMAND_GROUP_STAGE = 0;
@@ -36,17 +36,33 @@ public class Climber extends Subsystem {
     BExtender = new WPI_TalonSRX(RobotMap.BACK_EXTENDER_CHANNEL);
     BackDriveMotor = new WPI_TalonSRX(RobotMap.BACK_EXTENDER_DRIVE_CHANNEL);
 
-    FRExtender.config_kP(0, 0);
+    FRExtender.config_kP(0, 0.2);
     FRExtender.config_kI(0, 0);
     FRExtender.config_kD(0, 0);
     FRExtender.config_kF(0, 0);
+    FRExtender.configMotionCruiseVelocity(300);
+    FRExtender.configMotionAcceleration(300);
+
+    FLExtender.config_kP(0, 0.2);
+    FLExtender.config_kI(0, 0);
+    FLExtender.config_kD(0, 0);
+    FLExtender.config_kF(0, 0);
+    FLExtender.configMotionCruiseVelocity(300);
+    FLExtender.configMotionAcceleration(300);
+
+    BExtender.config_kP(0, 0.2);
+    BExtender.config_kI(0, 0);
+    BExtender.config_kD(0, 0);
+    BExtender.config_kF(0, 0);
+    BExtender.configMotionCruiseVelocity(300);
+    BExtender.configMotionAcceleration(300);
 
   }
  
   public void lowerClimber(){
-    FRExtender.set(ControlMode.Position, EXTENDER_HEIGHT);
-    FLExtender.set(ControlMode.Position, EXTENDER_HEIGHT);
-    BExtender.set(ControlMode.Position, EXTENDER_HEIGHT);
+    FRExtender.set(ControlMode.MotionMagic, EXTENDER_HEIGHT);
+    FLExtender.set(ControlMode.MotionMagic, -EXTENDER_HEIGHT);
+    BExtender.set(ControlMode.MotionMagic, -EXTENDER_HEIGHT);
 
   }public boolean lowerClimberIsFinished(){
     int rightValue = FRExtender.getSelectedSensorPosition(0);
@@ -61,9 +77,9 @@ public class Climber extends Subsystem {
   }
 
   public void raiseFrontClimber(){
-    FRExtender.set(ControlMode.Position, 0);
-    FLExtender.set(ControlMode.Position, 0);
-    BExtender.set(ControlMode.Position, EXTENDER_HEIGHT);
+    FRExtender.set(ControlMode.MotionMagic, 0);
+    FLExtender.set(ControlMode.MotionMagic, 0);
+    BExtender.set(ControlMode.MotionMagic, -EXTENDER_HEIGHT);
   }
 
   public boolean raiseFrontClimberIsFinished(){
@@ -78,9 +94,9 @@ public class Climber extends Subsystem {
   }
 
   public void raiseBackClimber(){
-    FRExtender.set(ControlMode.Position, 0);
-    FLExtender.set(ControlMode.Position, 0);
-    BExtender.set(ControlMode.Position, 0);
+    FRExtender.set(ControlMode.MotionMagic, 0);
+    FLExtender.set(ControlMode.MotionMagic, 0);
+    BExtender.set(ControlMode.MotionMagic, 0);
   }
 
   public boolean raiseBackClimberIsFinished(){

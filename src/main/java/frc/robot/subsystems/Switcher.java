@@ -15,6 +15,7 @@ import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.subsystems.Elevator.Height;
@@ -30,6 +31,9 @@ public class Switcher extends Subsystem {
   public SwitcherState currentSwitcherState;
   double initialEncoderPosition;
   double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
+  double intermediateSetPoint;
+  double target;
+  boolean reached;
 
   public Switcher() {
     switchMotor = new CANSparkMax(RobotMap.SWITCH_MOTOR_CHANNEL, MotorType.kBrushless);
@@ -37,25 +41,37 @@ public class Switcher extends Subsystem {
     encoder = new CANEncoder(switchMotor);
     currentSwitcherState = SwitcherState.FLOOR;
     encoderStart();
+    intermediateSetPoint = 0.0;
+    reached = false;
     //Does this effectively reset the encoder???
     //switchMotor.setParameter(ConfigParameter.kEncoderSampleDelta, 0);
   }
   public void encoderStart() {
     
     // PID coefficients
+     //kP = 5e-7;
      kP = 0.1; 
+     //kP = 0;
      //kI = 1e-4;
      //kD = 1; 
-     kI = 0.0;
+     //kI = 1e-8;
+     kI = 0;
      kD = 0.0; 
      kIz = 0; 
+     //kFF = 0.000156;
      kFF = 0; 
      kMaxOutput = 1; 
      kMinOutput = -1;
-     // set PID coefficients
+     // set PID coefficients\
     controller.setP(kP);
     controller.setI(kI);
     controller.setD(kD);
+    controller.setFF(kFF);
+    //controller.setSmartMotionMaxVelocity(2000, 0);
+    //controller.setSmartMotionMaxAccel(1500, 0);
+    controller.setOutputRange(-1, 1);
+    encoder.setPosition(0);
+    
     // controller.setIZone(kIz);
     // controller.setFF(kFF);
     // controller.setOutputRange(kMinOutput, kMaxOutput);
@@ -74,7 +90,7 @@ public class Switcher extends Subsystem {
     //Probably only go to floor level if elevator at bottom
     System.out.println("Switcher.moveSwitch to " + setPoint.switcherEncoderPosition);
     //System.out.println("Switcher.moveSwitch to " + setPoint.switcherEncoderPosition);
-    controller.setReference(setPoint.switcherEncoderPosition, ControlType.kPosition);
+    //controller.setReference(setPoint.switcherEncoderPosition, ControlType.kSmartMotion);
     this.currentSwitcherState = setPoint;
     System.out.println("Current switcher position: " + encoder.getPosition());
     // if(Robot.elevator.currentTargetHeight == Height.GROUND){
@@ -97,9 +113,26 @@ public class Switcher extends Subsystem {
   
 	public void motorControl() {
     //System.out.println(currentTargetHeight.toString());
+    //System.out.println("Target: " + currentSwitcherState.switcherEncoderPosition + " Current: " + encoder.getPosition());
+      
+    target = currentSwitcherState.switcherEncoderPosition;
+    if(intermediateSetPoint - target > -0.05 && intermediateSetPoint - target < 0.05){
+      if(!reached){
+        System.out.println("intermediateSetPoint at Target");
+        reached = true;
+      }
+    } else if(intermediateSetPoint<target){
+      intermediateSetPoint+=0.1;
+      reached = false;
+    }else if(intermediateSetPoint>target){
+      intermediateSetPoint-=0.1;
+      reached = false;
+    }
     
-      //System.out.println("Target: " + currentSwitcherState.switcherEncoderPosition + " Current: " + encoder.getPosition());
-      controller.setReference(currentSwitcherState.switcherEncoderPosition, ControlType.kPosition);
+    SmartDashboard.putNumber("intermediateSetPoint", intermediateSetPoint);
+
+
+    controller.setReference(intermediateSetPoint, ControlType.kPosition);
         
       
   
@@ -152,6 +185,10 @@ public class Switcher extends Subsystem {
       default:
         return SwitcherState.FLOOR;
     }
+  }
+  
+  public double getCurrentSwitch(){
+    return encoder.getPosition();
   }
 }
 

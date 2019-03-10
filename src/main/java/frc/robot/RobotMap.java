@@ -62,7 +62,7 @@ public class RobotMap {
   public static final double k_wheel_diameter = 0.49; //feet!
   public static final double k_max_velocity = 10.0;
 
-  public static final double DRIVE_P_VALUE = 0.3;
+  public static final double DRIVE_P_VALUE = 0.1;
   public static final double DRIVE_I_VALUE = 0.0;
   public static final double DRIVE_D_VALUE = 0.0;
   public static final double DRIVE_V_VALUE = 0.054;
@@ -93,18 +93,18 @@ public class RobotMap {
   public static final int ELEVATOR_CLIMB_LOWER_HEIGHT = 0;
 
   public static final int ELEVATOR_GROUND_HEIGHT = 0;
-  public static final int ELEVATOR_LEVEL1_HATCH_HEIGHT = 30;
-  public static final int ELEVATOR_LEVEL1_BALL_HEIGHT = 60;
-  public static final int ELEVATOR_LEVEL2_HATCH_HEIGHT = 90;
-  public static final int ELEVATOR_LEVEL2_BALL_HEIGHT = 120;
-  public static final int ELEVATOR_LEVEL3_HATCH_HEIGHT = 150;
-  public static final int ELEVATOR_LEVEL3_BALL_HEIGHT = 180;
+  public static final int ELEVATOR_LEVEL1_HATCH_HEIGHT = 0;
+  public static final int ELEVATOR_LEVEL1_BALL_HEIGHT = 58;
+  public static final int ELEVATOR_LEVEL2_HATCH_HEIGHT = 76;
+  public static final int ELEVATOR_LEVEL2_BALL_HEIGHT = 166;
+  public static final int ELEVATOR_LEVEL3_HATCH_HEIGHT = 197;
+  public static final int ELEVATOR_LEVEL3_BALL_HEIGHT = 228;
 
   //public static final String k_path_name = "example";
   //------------------------------------------------------
   public static final double SWITCHER_FLOOR = 0;
   public static final double SWITCHER_CARGO = 0;
-  public static final double SWITCHER_HATCH = 5.5;
-  public static final double SWITCHER_REAR = 7;
+  public static final double SWITCHER_HATCH = 16;
+  public static final double SWITCHER_REAR = 25;
   
 }
