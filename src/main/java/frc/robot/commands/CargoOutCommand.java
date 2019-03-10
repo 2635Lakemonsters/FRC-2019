@@ -11,22 +11,26 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
 public class CargoOutCommand extends Command {
-  public CargoOutCommand() {
+  double leftSpeed;
+  double rightSpeed;
+  public CargoOutCommand(double leftSpeed, double rightSpeed) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     //requires(Robot.cargo);
+    this.leftSpeed = leftSpeed;
+    this.rightSpeed = rightSpeed;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.cargo.cargoOut();
+    Robot.cargo.cargoOut(leftSpeed, rightSpeed);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.cargo.cargoOut();
+    Robot.cargo.cargoOut(leftSpeed, rightSpeed);
   }
 
   // Make this return true when this Command no longer needs to run execute()

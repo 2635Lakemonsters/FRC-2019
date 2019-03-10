@@ -34,7 +34,7 @@ import frc.robot.model.GameToolStateMachine;
  * project.
  */
 public class Robot extends TimedRobot {
-  public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
+  public static Vision visionSubsystem;
   public static OI oi;
   public static DriveSubsystemNeo driveSubsystem;
   public static Elevator elevator;
@@ -62,6 +62,8 @@ public class Robot extends TimedRobot {
   ElevatorControl elevatorControl;
   SwitcherControl switchControl;
   CargoOutCommand cargoOutCommand;
+  CargoOutCommand cargoOutLeftCommand;
+  CargoOutCommand cargoOutRightCommand;
   CargoInCommand cargoInCommand;
   
   CANSparkMax SPARK;
@@ -78,6 +80,7 @@ public class Robot extends TimedRobot {
     
     oi = new OI();
     driveSubsystem = new DriveSubsystemNeo();
+    visionSubsystem = new Vision();
     elevator = new Elevator();
     flower = new Flower();
     switcher = new Switcher();
@@ -101,7 +104,9 @@ public class Robot extends TimedRobot {
     climbCommandGroup = new ClimbCommandGroup();
     elevatorControl = new ElevatorControl();
     switchControl = new SwitcherControl();
-    cargoOutCommand = new CargoOutCommand();
+    cargoOutCommand = new CargoOutCommand(0.6,0.6);
+    cargoOutLeftCommand = new CargoOutCommand(-1.0,0);
+    cargoOutRightCommand = new CargoOutCommand(0,-1.0);
     cargoInCommand = new CargoInCommand();
     
 
@@ -122,6 +127,8 @@ public class Robot extends TimedRobot {
     oi.climbCancelButton.whenPressed(climbCancelCommand);
     oi.cargoInButton.whileHeld(cargoInCommand);
     oi.cargoOutButton.toggleWhenPressed(cargoOutCommand);
+    oi.cargoOutLeftButton.toggleWhenPressed(cargoOutLeftCommand);
+    oi.cargoOutRightButton.toggleWhenPressed(cargoOutRightCommand);
     
   }
 

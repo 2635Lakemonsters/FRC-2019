@@ -82,7 +82,7 @@ public class RobotMap {
   public static final int ELEVATOR_TOLERANCE = 1;
   public static final int ELEVATOR_UPPER_MOTOR_CHANNEL = 6;
   public static final int ELEVATOR_LOWER_MOTOR1_CHANNEL = 5;
-  public static final int SMALL_ELEVATOR_MAX = 90;
+  public static final int SMALL_ELEVATOR_MAX = 95;
   // public static final int ELEVATOR_ACCELERATION = 5000;
   // public static final int ELEVATOR_VELOCITY = 3000;
   public static final int ELEVATOR_GROUND_LOWER_HEIGHT = 0;
@@ -104,7 +104,7 @@ public class RobotMap {
   //------------------------------------------------------
   public static final double SWITCHER_FLOOR = 0;
   public static final double SWITCHER_CARGO = 0;
-  public static final double SWITCHER_HATCH = 16;
-  public static final double SWITCHER_REAR = 25;
-  
+  public static final double SWITCHER_HATCH = 18;
+  //public static final double SWITCHER_REAR = 35; // rear deploy
+  public static final double SWITCHER_REAR = 7; // front deploy 
 }

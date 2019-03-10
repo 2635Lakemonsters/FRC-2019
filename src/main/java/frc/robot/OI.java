@@ -62,4 +62,6 @@ public class OI {
   public Button climbCancelButton = new JoystickButton(rightJoy, 9);
   public Button cargoInButton = new JoystickButton(rightJoy, 3);
   public Button cargoOutButton = new JoystickButton(rightJoy, 2);
+  public Button cargoOutLeftButton = new JoystickButton(rightJoy, 7);
+  public Button cargoOutRightButton = new JoystickButton(rightJoy, 10);
 }

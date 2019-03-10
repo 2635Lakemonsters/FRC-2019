@@ -33,8 +33,9 @@ public class Cargo extends Subsystem {
     rightMotor = new WPI_TalonSRX(RobotMap.RIGHT_INTAKE_MOTOR_CHANNEL);
   }
 
-  public void cargoOut(){
-    control(0.6, 0.6);
+  public void cargoOut(double leftSpeed, double rightSpeed){
+    control(leftSpeed, rightSpeed);
+    //control(0.6, 0.6);
   }
 
   public void cargoIn(){

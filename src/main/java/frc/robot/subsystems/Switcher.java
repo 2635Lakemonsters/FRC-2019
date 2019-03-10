@@ -122,10 +122,10 @@ public class Switcher extends Subsystem {
         reached = true;
       }
     } else if(intermediateSetPoint<target){
-      intermediateSetPoint+=0.1;
+      intermediateSetPoint+=0.3;
       reached = false;
     }else if(intermediateSetPoint>target){
-      intermediateSetPoint-=0.1;
+      intermediateSetPoint-=0.3;
       reached = false;
     }
     
