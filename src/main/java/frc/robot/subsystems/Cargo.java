@@ -50,4 +50,12 @@ public class Cargo extends Subsystem {
     leftMotor.set(-left);
     rightMotor.set(right);
   }
+
+  public double getLeftCurrent() {
+    return leftMotor.getOutputCurrent();
+  }
+
+  public double getRightCurrent() {
+    return rightMotor.getOutputCurrent();
+  }
 }

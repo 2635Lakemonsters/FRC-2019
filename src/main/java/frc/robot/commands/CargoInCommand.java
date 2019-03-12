@@ -5,6 +5,8 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
+//THIS COMMAND ACTUALLY SHOOTS THE BALL OUT
+
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;

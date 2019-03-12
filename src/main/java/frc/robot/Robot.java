@@ -80,7 +80,7 @@ public class Robot extends TimedRobot {
     
     oi = new OI();
     driveSubsystem = new DriveSubsystemNeo();
-    visionSubsystem = new Vision();
+    //visionSubsystem = new Vision();
     elevator = new Elevator();
     flower = new Flower();
     switcher = new Switcher();
@@ -162,6 +162,9 @@ public void InitChooser() {
   public void robotPeriodic() {
     SmartDashboard.putNumber("Elevator Height", elevator.currentHeight());
     SmartDashboard.putNumber("Switcher Height", switcher.getCurrentSwitch());
+    SmartDashboard.putNumber("Intake Left Current", cargo.getLeftCurrent());
+    SmartDashboard.putNumber("Intake Right Current", cargo.getRightCurrent());
+
   }
 
   /**
@@ -293,6 +296,8 @@ boolean autoHappened = false;
     }else if(!oi.leftJoy.getRawButton(3) && boolistatus == true){
       boolistatus = false;
     }
+
+
 
     //SPARK.set(-0.1);
     //System.out.println("Left Position: " + driveSubsystem.FLMotor.getSelectedSensorPosition(0));

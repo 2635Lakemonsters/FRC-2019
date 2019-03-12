@@ -5,6 +5,8 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
+//THIS COMMAND ACTUALLY SUCKS THE BALL IN
+
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -36,7 +38,12 @@ public class CargoOutCommand extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    if(Robot.cargo.getLeftCurrent() > 10 || Robot.cargo.getRightCurrent() > 10) {
+      System.out.println("CargoIn isFinished true");
+      return true;
+    } else {
+      return false;
+    }
   }
 
   // Called once after isFinished returns true

@@ -66,8 +66,12 @@ public class GameToolStateMachine {
             case INITIAL_AUTO:
                 return GameTools.HATCH1F;
             case CARGO1:
+                return GameTools.CARGOTRANSIT;
+            case CARGOTRANSIT:
                 return GameTools.CARGO2;
             case CARGO2:
+                return GameTools.CARGOS;
+            case CARGOS:
                 return GameTools.CARGO3;
             case CARGO3:
                 return GameTools.CARGO4;
@@ -105,9 +109,13 @@ public class GameToolStateMachine {
             case CARGO1:
                 return GameTools.CARGO1;
             case CARGO2:
+                return GameTools.CARGOTRANSIT;
+            case CARGOTRANSIT:
                 return GameTools.CARGO1;
-            case CARGO3:
+            case CARGOS:
                 return GameTools.CARGO2;
+            case CARGO3:
+                return GameTools.CARGOS;
             case CARGO4:
                 return GameTools.CARGO3;
             case HATCH1B:
@@ -140,6 +148,10 @@ public class GameToolStateMachine {
     GameTools swapState(){
         switch(currentState) {
             case CARGO2:
+                return GameTools.HATCH1B;
+            case CARGOTRANSIT:
+                return GameTools.HATCH1B;
+            case CARGOS:
                 return GameTools.HATCH1B;
             case CARGO3:
                 return GameTools.HATCH1B;
@@ -197,7 +209,9 @@ public class GameToolStateMachine {
         HATCH3B(Height.LEVEL3H, SwitcherState.HATCH, FlowerBud.BUD, FlowerIO.OUT),
         HATCH1F(Height.LEVEL1H, SwitcherState.HATCH, FlowerBud.FLOWER, FlowerIO.OUT),
         HATCH2F(Height.LEVEL2H, SwitcherState.HATCH, FlowerBud.FLOWER, FlowerIO.OUT),
-        HATCH3F(Height.LEVEL3H, SwitcherState.HATCH, FlowerBud.FLOWER, FlowerIO.OUT);
+        HATCH3F(Height.LEVEL3H, SwitcherState.HATCH, FlowerBud.FLOWER, FlowerIO.OUT),
+        CARGOS(Height.LEVELSB, SwitcherState.CARGO, FlowerBud.BUD, FlowerIO.IN),
+        CARGOTRANSIT(Height.TRANSIT, SwitcherState.CARGO, FlowerBud.BUD, FlowerIO.IN);
 
         public Height elevator;
         public SwitcherState switcher;
