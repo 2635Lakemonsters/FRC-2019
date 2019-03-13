@@ -50,7 +50,7 @@ public class Switcher extends Subsystem {
     
     // PID coefficients
      //kP = 5e-7;
-     kP = 0.1; 
+     kP = 0.05; 
      //kP = 0;
      //kI = 1e-4;
      //kD = 1; 
@@ -111,11 +111,18 @@ public class Switcher extends Subsystem {
     // }
   }
   
-	public void motorControl() {
+	public boolean motorControl() {
     //System.out.println(currentTargetHeight.toString());
     //System.out.println("Target: " + currentSwitcherState.switcherEncoderPosition + " Current: " + encoder.getPosition());
       
     target = currentSwitcherState.switcherEncoderPosition;
+
+    if(intermediateSetPoint > target && currentSwitcherState == SwitcherState.CARGO && encoder.getPosition() < 0.75){
+      controller.setReference(0, ControlType.kVoltage);
+      SmartDashboard.putNumber("intermediateSetPoint", encoder.getPosition());
+      return false;
+    }
+
     if(intermediateSetPoint - target > -0.05 && intermediateSetPoint - target < 0.05){
       if(!reached){
         System.out.println("intermediateSetPoint at Target");
@@ -125,16 +132,22 @@ public class Switcher extends Subsystem {
       intermediateSetPoint+=0.3;
       reached = false;
     }else if(intermediateSetPoint>target){
-      intermediateSetPoint-=0.3;
-      reached = false;
+      
+        intermediateSetPoint-=0.3;
+        reached = false;
+      
+      
     }
+
+
     
-    SmartDashboard.putNumber("intermediateSetPoint", intermediateSetPoint);
+    SmartDashboard.putNumber("intermediateSetPoint", encoder.getPosition());
 
 
     controller.setReference(intermediateSetPoint, ControlType.kPosition);
+    
         
-      
+      return true;
   
     }
 

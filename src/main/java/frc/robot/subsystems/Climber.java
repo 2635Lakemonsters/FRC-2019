@@ -24,6 +24,8 @@ public class Climber extends Subsystem {
   WPI_TalonSRX FLExtender;
   WPI_TalonSRX BExtender;
   WPI_TalonSRX BackDriveMotor;
+  double intermediateSetPoint;
+  boolean reached;
 
   int EXTENDER_HEIGHT = 22000;
 
@@ -40,31 +42,33 @@ public class Climber extends Subsystem {
     FRExtender.config_kI(0, 0);
     FRExtender.config_kD(0, 0);
     FRExtender.config_kF(0, 0);
-    FRExtender.configMotionCruiseVelocity(300);
-    FRExtender.configMotionAcceleration(300);
+    //FRExtender.configMotionCruiseVelocity(300);
+    //FRExtender.configMotionAcceleration(300);
 
     FLExtender.config_kP(0, 0.2);
     FLExtender.config_kI(0, 0);
     FLExtender.config_kD(0, 0);
     FLExtender.config_kF(0, 0);
-    FLExtender.configMotionCruiseVelocity(300);
-    FLExtender.configMotionAcceleration(300);
+    //FLExtender.configMotionCruiseVelocity(300);
+    //FLExtender.configMotionAcceleration(300);
 
     BExtender.config_kP(0, 0.2);
     BExtender.config_kI(0, 0);
     BExtender.config_kD(0, 0);
     BExtender.config_kF(0, 0);
-    BExtender.configMotionCruiseVelocity(300);
-    BExtender.configMotionAcceleration(300);
+    //BExtender.configMotionCruiseVelocity(300);
+    //BExtender.configMotionAcceleration(300);
+
+    intermediateSetPoint = 0;
+    reached = false;
 
   }
  
   public void lowerClimber(){
-    FRExtender.set(ControlMode.MotionMagic, EXTENDER_HEIGHT);
-    FLExtender.set(ControlMode.MotionMagic, -EXTENDER_HEIGHT);
-    BExtender.set(ControlMode.MotionMagic, -EXTENDER_HEIGHT);
-
-  }public boolean lowerClimberIsFinished(){
+    moveClimber(EXTENDER_HEIGHT, EXTENDER_HEIGHT, EXTENDER_HEIGHT);
+  }
+  
+  public boolean lowerClimberIsFinished(){
     int rightValue = FRExtender.getSelectedSensorPosition(0);
     int leftValue = FLExtender.getSelectedSensorPosition(0);
     int backValue = BExtender.getSelectedSensorPosition(0);
@@ -77,9 +81,7 @@ public class Climber extends Subsystem {
   }
 
   public void raiseFrontClimber(){
-    FRExtender.set(ControlMode.MotionMagic, 0);
-    FLExtender.set(ControlMode.MotionMagic, 0);
-    BExtender.set(ControlMode.MotionMagic, -EXTENDER_HEIGHT);
+    moveClimber(0, 0, EXTENDER_HEIGHT);
   }
 
   public boolean raiseFrontClimberIsFinished(){
@@ -94,9 +96,7 @@ public class Climber extends Subsystem {
   }
 
   public void raiseBackClimber(){
-    FRExtender.set(ControlMode.MotionMagic, 0);
-    FLExtender.set(ControlMode.MotionMagic, 0);
-    BExtender.set(ControlMode.MotionMagic, 0);
+    moveClimber(0, 0, 0);
   }
 
   public boolean raiseBackClimberIsFinished(){
@@ -111,6 +111,30 @@ public class Climber extends Subsystem {
 
   public void drive(double driveSpeed){
     BackDriveMotor.set(driveSpeed);
+  }
+
+  public void moveClimber(double right, double left, double back){
+    
+    if(intermediateSetPoint - right < 0.15 && intermediateSetPoint - right > -0.15){
+      if(!reached){
+        System.out.println("intermediateSetPoint at Target");
+        reached = true;
+      }
+      
+    } else if(intermediateSetPoint < right){
+      intermediateSetPoint += 300;
+      reached = false;
+    } else{
+      intermediateSetPoint -= 300;
+      reached = false;
+    }
+
+    FRExtender.set(ControlMode.Position, intermediateSetPoint);
+    FLExtender.set(ControlMode.Position, -intermediateSetPoint);
+    //BExtender.set(ControlMode.Position, -intermediateSetPoint);
+    BExtender.set(ControlMode.PercentOutput, -1);
+
+    //System.out.println(FRExtender.getSelectedSensorPosition());
   }
 
   /*
