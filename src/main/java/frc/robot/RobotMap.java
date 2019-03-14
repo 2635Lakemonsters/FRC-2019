@@ -107,7 +107,7 @@ public class RobotMap {
   //------------------------------------------------------
   public static final double SWITCHER_FLOOR = 0;
   public static final double SWITCHER_CARGO = 0;
-  public static final double SWITCHER_HATCH = 14;
+  public static final double SWITCHER_HATCH = 16;
   //public static final double SWITCHER_REAR = 35; // rear deploy
   public static final double SWITCHER_REAR = 7; // front deploy 
 }

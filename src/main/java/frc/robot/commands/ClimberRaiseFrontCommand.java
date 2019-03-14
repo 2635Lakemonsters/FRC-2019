@@ -14,19 +14,21 @@ public class ClimberRaiseFrontCommand extends Command {
   public ClimberRaiseFrontCommand() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
+    requires(Robot.driveSubsystem);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
     Robot.climber.COMMAND_GROUP_STAGE = 2;
+    System.out.println("ClimberRaiseFrontCommand Initialized!!!");
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
     Robot.climber.raiseFrontClimber();
-    Robot.driveSubsystem.tankDrive(0.05, 0.05);
+    Robot.driveSubsystem.tankDrive(0.3, 0.3);
     //What if this puts pressure on legs and they can't retract?
     //Run back wheel at same time and transition from wall contact on back legs?
     //This is likely the worst stage to be cancelled out of, as there is a higher likelyhood of falling at an angle, causing damage to the mast
@@ -44,7 +46,11 @@ public class ClimberRaiseFrontCommand extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.climber.raiseFrontClimberIsFinished();
+    boolean isFinished = Robot.climber.raiseFrontClimberIsFinished();
+    if (isFinished) {
+      System.out.println("ClimberRaiseFrontCommand Finished!!!");
+    }
+    return isFinished;
   }
 
   // Called once after isFinished returns true

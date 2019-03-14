@@ -25,7 +25,9 @@ public class Climber extends Subsystem {
   WPI_TalonSRX BExtender;
   WPI_TalonSRX BackDriveMotor;
   double intermediateSetPoint;
+  double intermediateSetPointBack;
   boolean reached;
+  boolean reachedBack;
 
   int EXTENDER_HEIGHT = 22000;
 
@@ -38,21 +40,21 @@ public class Climber extends Subsystem {
     BExtender = new WPI_TalonSRX(RobotMap.BACK_EXTENDER_CHANNEL);
     BackDriveMotor = new WPI_TalonSRX(RobotMap.BACK_EXTENDER_DRIVE_CHANNEL);
 
-    FRExtender.config_kP(0, 0.2);
+    FRExtender.config_kP(0, 0.4);
     FRExtender.config_kI(0, 0);
     FRExtender.config_kD(0, 0);
     FRExtender.config_kF(0, 0);
     //FRExtender.configMotionCruiseVelocity(300);
     //FRExtender.configMotionAcceleration(300);
 
-    FLExtender.config_kP(0, 0.2);
+    FLExtender.config_kP(0, 0.4);
     FLExtender.config_kI(0, 0);
     FLExtender.config_kD(0, 0);
     FLExtender.config_kF(0, 0);
     //FLExtender.configMotionCruiseVelocity(300);
     //FLExtender.configMotionAcceleration(300);
 
-    BExtender.config_kP(0, 0.2);
+    BExtender.config_kP(0, 0.4);
     BExtender.config_kI(0, 0);
     BExtender.config_kD(0, 0);
     BExtender.config_kF(0, 0);
@@ -60,8 +62,16 @@ public class Climber extends Subsystem {
     //BExtender.configMotionAcceleration(300);
 
     intermediateSetPoint = 0;
+    intermediateSetPointBack = 0;
     reached = false;
+    reachedBack = false;
 
+  }
+
+  public void reset() {
+    FRExtender.setSelectedSensorPosition(0);
+    FLExtender.setSelectedSensorPosition(0);
+    BExtender.setSelectedSensorPosition(0);
   }
  
   public void lowerClimber(){
@@ -72,12 +82,26 @@ public class Climber extends Subsystem {
     int rightValue = FRExtender.getSelectedSensorPosition(0);
     int leftValue = FLExtender.getSelectedSensorPosition(0);
     int backValue = BExtender.getSelectedSensorPosition(0);
+    int errorThreshold = 1500;
+  
+    int rightError = Math.abs(EXTENDER_HEIGHT - Math.abs(rightValue));
+    int leftError = Math.abs(EXTENDER_HEIGHT - Math.abs(leftValue));
+    int backError = Math.abs(EXTENDER_HEIGHT - Math.abs(backValue));
 
-    if(rightValue == EXTENDER_HEIGHT && leftValue == EXTENDER_HEIGHT && backValue == EXTENDER_HEIGHT){
+    //System.out.println("rightError: " + rightError + "\t leftError: " + leftError + "\t backError: " + backError);
+    
+    if ( rightError < errorThreshold
+     && leftError < errorThreshold
+     &&  backError < errorThreshold)
       return true;
-    }else{
+    else
       return false;
-    }
+    
+    // if(rightValue == EXTENDER_HEIGHT && leftValue == EXTENDER_HEIGHT && backValue == EXTENDER_HEIGHT){
+    //   return true;
+    // }else{
+    //   return false;
+    // }
   }
 
   public void raiseFrontClimber(){
@@ -87,8 +111,14 @@ public class Climber extends Subsystem {
   public boolean raiseFrontClimberIsFinished(){
     int rightValue = FRExtender.getSelectedSensorPosition(0);
     int leftValue = FLExtender.getSelectedSensorPosition(0);
+    int errorThreshold = 1500;
+    
+    int rightError = Math.abs(rightValue);
+    int leftError = Math.abs(leftValue);
 
-    if(rightValue == 0 && leftValue == 0){
+    System.out.println("rightError: " + rightError + "\t leftError: " + leftError);
+
+    if(rightError < errorThreshold && leftError < errorThreshold){
       return true;
     }else{
       return false;
@@ -101,8 +131,13 @@ public class Climber extends Subsystem {
 
   public boolean raiseBackClimberIsFinished(){
     int backValue = BExtender.getSelectedSensorPosition(0);
+    int errorThreshold = 1500;
 
-    if(backValue == 0){
+    int backError = Math.abs(backValue);
+
+    System.out.println("backError: " + backError);
+
+    if(backError < errorThreshold){
       return true;
     }else{
       return false;
@@ -113,6 +148,7 @@ public class Climber extends Subsystem {
     BackDriveMotor.set(driveSpeed);
   }
 
+  
   public void moveClimber(double right, double left, double back){
     
     if(intermediateSetPoint - right < 0.15 && intermediateSetPoint - right > -0.15){
@@ -122,20 +158,33 @@ public class Climber extends Subsystem {
       }
       
     } else if(intermediateSetPoint < right){
-      intermediateSetPoint += 300;
+      intermediateSetPoint += 200;
       reached = false;
     } else{
-      intermediateSetPoint -= 300;
+      intermediateSetPoint -= 200;
       reached = false;
+    }
+
+    if(intermediateSetPointBack - back < 0.15 && intermediateSetPointBack - back > -0.15){
+      if(!reachedBack){
+        System.out.println("intermediateSetPoint at Target");
+        reachedBack = true;
+      }
+      
+    } else if(intermediateSetPointBack < back){
+      intermediateSetPointBack += 200;
+      reachedBack = false;
+    } else{
+      intermediateSetPointBack -= 200;
+      reachedBack = false;
     }
 
     FRExtender.set(ControlMode.Position, intermediateSetPoint);
     FLExtender.set(ControlMode.Position, -intermediateSetPoint);
-    //BExtender.set(ControlMode.Position, -intermediateSetPoint);
-    BExtender.set(ControlMode.PercentOutput, -1);
-
-    //System.out.println(FRExtender.getSelectedSensorPosition());
+    BExtender.set(ControlMode.Position, -intermediateSetPointBack);
+  
   }
+ 
 
   /*
   * One of two options needs to be chosen.
@@ -144,7 +193,7 @@ public class Climber extends Subsystem {
   * And use a constant amount of encoder counts to proceed
   */
   public boolean driveHitWall(){
-    if( BackDriveMotor.getOutputCurrent() > 2.0) {
+    if( BackDriveMotor.getOutputCurrent() > 10.0) {
       System.out.println("current > 2");
       return true;
     }else{

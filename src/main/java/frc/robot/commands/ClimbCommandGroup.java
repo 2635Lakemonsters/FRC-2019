@@ -32,9 +32,9 @@ public class ClimbCommandGroup extends CommandGroup {
     // arm.
     //addSequential(new ClimberTimeAvailableCommand());
     addSequential(new RaiseRobotCommand());
-    //addSequential(new ClimberDriveCommand(1));
-    //addSequential(new ClimberRaiseFrontCommand());
-    //addSequential(new ClimberRaiseBackCommand());
+    addSequential(new ClimberDriveCommand(1, 6));
+    addSequential(new ClimberRaiseFrontCommand());
+    addSequential(new ClimberRaiseBackCommand());
     
   }
 }

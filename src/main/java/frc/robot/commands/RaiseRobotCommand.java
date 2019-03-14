@@ -20,6 +20,7 @@ public class RaiseRobotCommand extends Command {
   @Override
   protected void initialize() {
     Robot.climber.COMMAND_GROUP_STAGE = 0;
+    Robot.climber.reset();
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -31,8 +32,14 @@ public class RaiseRobotCommand extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
-    //return Robot.climber.lowerClimberIsFinished();
+    //return false;
+    boolean isFinished = Robot.climber.lowerClimberIsFinished();
+    if (isFinished)
+    {
+      System.out.println("RaiseRobotCommand Finished!!!!");
+
+    }
+    return isFinished;
     
   }
 

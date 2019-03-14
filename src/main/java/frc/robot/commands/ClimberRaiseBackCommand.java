@@ -14,6 +14,7 @@ public class ClimberRaiseBackCommand extends Command {
   public ClimberRaiseBackCommand() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
+    requires(Robot.driveSubsystem);
   }
 
   // Called just before this Command runs the first time
@@ -26,7 +27,7 @@ public class ClimberRaiseBackCommand extends Command {
   @Override
   protected void execute() {
     Robot.climber.raiseBackClimber();
-    Robot.driveSubsystem.tankDrive(0.05, 0.05);
+    Robot.driveSubsystem.tankDrive(0.3, 0.3);
   }
 
   // Make this return true when this Command no longer needs to run execute()
