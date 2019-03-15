@@ -70,6 +70,7 @@ public class Robot extends TimedRobot {
   ClimberRaiseFrontCommand climberRaiseFrontCommand;
   ClimberDriveCommand climberDriveCommand;
   ClimberControl climberControl;
+  AutoInitGameToolCommand autoInitGameToolCommand;
   
   CANSparkMax SPARK;
 
@@ -85,7 +86,7 @@ public class Robot extends TimedRobot {
     
     oi = new OI();
     driveSubsystem = new DriveSubsystemNeo();
-    //visionSubsystem = new Vision();
+    visionSubsystem = new Vision();
     elevator = new Elevator();
     flower = new Flower();
     switcher = new Switcher();
@@ -118,6 +119,7 @@ public class Robot extends TimedRobot {
     climberRaiseFrontCommand = new ClimberRaiseFrontCommand();
     climberDriveCommand = new ClimberDriveCommand(1, 9);
     climberControl = new ClimberControl();
+    autoInitGameToolCommand = new AutoInitGameToolCommand();
     
 
     InitChooser();
@@ -143,6 +145,7 @@ public class Robot extends TimedRobot {
     oi.climbDownButton.whileHeld(climberRaiseCommand);
     oi.climbRaiseFrontButton.whileHeld(climberRaiseFrontCommand);
     oi.climbDriveButton.whileHeld(climberDriveCommand);
+    oi.autoInitGameToolButton.whenPressed(autoInitGameToolCommand);
     
   }
 
@@ -226,7 +229,7 @@ boolean autoHappened = false;
   //  driveSubsystem.PathAutoInit();
     //---------------------------------------------
     driveSubsystem.setReverse(false);
-    gameToolStateMachine.reset();
+    //gameToolStateMachine.reset();
 
 		if (driveCommand != null) {
 			driveCommand.start();
@@ -248,13 +251,13 @@ boolean autoHappened = false;
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      m_autonomousCommand.start();
+      //m_autonomousCommand.start();
       }
     //driveSubsystem.bullyOff();
     autoHappened = true;
-    elevator.encoderStart();
-    elevatorControl.start();
-    switchControl.start();
+    // elevator.encoderStart();
+    // elevatorControl.start();
+    // switchControl.start();
   }
 
   /**
@@ -271,7 +274,6 @@ boolean autoHappened = false;
   public void teleopInit() {
     
     driveSubsystem.setReverse(false);
-    gameToolStateMachine.reset();
 
 		if (driveCommand != null) {
 			driveCommand.start();
@@ -294,13 +296,16 @@ boolean autoHappened = false;
     driveSubsystem.bullyOff();
     boolistatus = false;
     if(!autoHappened){
-      elevator.encoderStart();
-    }
-    elevatorControl.start();
-    switchControl.start();
-    climberControl.start();
-    gameToolStateMachine.autonomousReset();
 
+      elevator.encoderStart();
+      elevatorControl.start();
+      switchControl.start();
+      climberControl.start();
+      gameToolStateMachine.reset();
+    }
+    
+    
+    autoHappened = false;
   }
 
   /**

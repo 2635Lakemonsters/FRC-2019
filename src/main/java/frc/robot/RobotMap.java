@@ -52,7 +52,6 @@ public class RobotMap {
   public static int GAME_TOOL_DECREMENT_BUTTON = 4;
   public static int GAME_TOOL_SWAP_BUTTON = 2;
   public static int GAME_TOOL_FLOWER_BUTTON = 1;
-  public static int CLIMB_BUTTON = 8;
 
   //--------EXPERIMENTAL PATHWEAVER CONSTANTS------------
   // public static final int k_ticks_per_rev = 4096/*/3*/;//2018 Comp Bot
@@ -96,7 +95,7 @@ public class RobotMap {
   public static final int ELEVATOR_CLIMB_LOWER_HEIGHT = 0;
 
   public static final int ELEVATOR_GROUND_HEIGHT = 0;
-  public static final int ELEVATOR_LEVEL1_HATCH_HEIGHT = 0;
+  public static final int ELEVATOR_LEVEL1_HATCH_HEIGHT = 9;
   // public static final int ELEVATOR_TRANSIT_BALL_HEIGHT = 5;
   public static final int ELEVATOR_TRANSIT_BALL_HEIGHT = 7;
   // public static final int ELEVATOR_LEVEL1_BALL_HEIGHT = 58;

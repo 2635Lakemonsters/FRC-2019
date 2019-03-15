@@ -21,7 +21,7 @@ public class GameToolStateMachine {
     public GameTools currentState;
 
     public GameToolStateMachine(){
-        currentState = GameTools.INITIAL_AUTO;
+        currentState = GameTools.INITIAL;
     }
 
     public void reset() {
@@ -46,7 +46,7 @@ public class GameToolStateMachine {
         System.out.println(currentState);
     }
     GameTools autonomousResetState() {
-        return GameTools.HATCH1F;
+        return GameTools.INITIAL_AUTO;
     }
     
     public void increment() {
