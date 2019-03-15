@@ -10,8 +10,8 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class RaiseRobotCommand extends Command {
-  public RaiseRobotCommand() {
+public class ClimberControl extends Command {
+  public ClimberControl() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -19,28 +19,18 @@ public class RaiseRobotCommand extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.climber.COMMAND_GROUP_STAGE = 0;
-   // Robot.climber.reset();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.climber.lowerClimber();
+    Robot.climber.setClimber();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    //return false;
-    boolean isFinished = Robot.climber.lowerClimberIsFinished();
-    if (isFinished)
-    {
-      System.out.println("RaiseRobotCommand Finished!!!!");
-
-    }
-    return isFinished;
-    
+    return false;
   }
 
   // Called once after isFinished returns true

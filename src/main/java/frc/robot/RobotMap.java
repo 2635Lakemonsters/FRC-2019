@@ -82,7 +82,9 @@ public class RobotMap {
   public static final int ELEVATOR_TOLERANCE = 1;
   public static final int ELEVATOR_UPPER_MOTOR_CHANNEL = 6;
   public static final int ELEVATOR_LOWER_MOTOR1_CHANNEL = 5;
-  public static final int SMALL_ELEVATOR_MAX = 97;
+  // public static final int SMALL_ELEVATOR_MAX = 138;
+  public static final int SMALL_ELEVATOR_MAX = 150;
+
   // public static final int ELEVATOR_ACCELERATION = 5000;
   // public static final int ELEVATOR_VELOCITY = 3000;
   public static final int ELEVATOR_GROUND_LOWER_HEIGHT = 0;
@@ -95,19 +97,27 @@ public class RobotMap {
 
   public static final int ELEVATOR_GROUND_HEIGHT = 0;
   public static final int ELEVATOR_LEVEL1_HATCH_HEIGHT = 0;
-  public static final int ELEVATOR_TRANSIT_BALL_HEIGHT = 5;
-  public static final int ELEVATOR_LEVEL1_BALL_HEIGHT = 58;
-  public static final int ELEVATOR_LEVEL2_HATCH_HEIGHT = 76;
-  public static final int ELEVATOR_LEVEL2_BALL_HEIGHT = 166;
-  public static final int ELEVATOR_LEVEL3_HATCH_HEIGHT = 197;
-  public static final int ELEVATOR_LEVEL3_BALL_HEIGHT = 235;
-  public static final int ELEVATOR_SHIP_BALL_HEIGHT = 94;
+  // public static final int ELEVATOR_TRANSIT_BALL_HEIGHT = 5;
+  public static final int ELEVATOR_TRANSIT_BALL_HEIGHT = 7;
+  // public static final int ELEVATOR_LEVEL1_BALL_HEIGHT = 58;
+  public static final int ELEVATOR_LEVEL1_BALL_HEIGHT = 83;
+  // public static final int ELEVATOR_LEVEL2_HATCH_HEIGHT = 76;
+  public static final int ELEVATOR_LEVEL2_HATCH_HEIGHT = 108;
+  // public static final int ELEVATOR_LEVEL2_BALL_HEIGHT = 166;
+  public static final int ELEVATOR_LEVEL2_BALL_HEIGHT = 206;
+  // public static final int ELEVATOR_LEVEL3_HATCH_HEIGHT = 197;
+  public static final int ELEVATOR_LEVEL3_HATCH_HEIGHT = 237;
+  // public static final int ELEVATOR_LEVEL3_BALL_HEIGHT = 235;
+  public static final int ELEVATOR_LEVEL3_BALL_HEIGHT = 275;
+  // public static final int ELEVATOR_SHIP_BALL_HEIGHT = 94;
+  public static final int ELEVATOR_SHIP_BALL_HEIGHT = 134;
+
 
   //public static final String k_path_name = "example";
   //------------------------------------------------------
   public static final double SWITCHER_FLOOR = 0;
   public static final double SWITCHER_CARGO = 0;
-  public static final double SWITCHER_HATCH = 16;
+  public static final double SWITCHER_HATCH = 18;
   //public static final double SWITCHER_REAR = 35; // rear deploy
   public static final double SWITCHER_REAR = 7; // front deploy 
 }

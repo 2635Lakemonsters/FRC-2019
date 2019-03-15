@@ -65,6 +65,11 @@ public class Robot extends TimedRobot {
   CargoOutCommand cargoOutLeftCommand;
   CargoOutCommand cargoOutRightCommand;
   CargoInCommand cargoInCommand;
+  RaiseRobotCommand raiseRobotCommand;
+  public static ClimberRaiseBackCommand climberRaiseCommand;
+  ClimberRaiseFrontCommand climberRaiseFrontCommand;
+  ClimberDriveCommand climberDriveCommand;
+  ClimberControl climberControl;
   
   CANSparkMax SPARK;
 
@@ -101,13 +106,18 @@ public class Robot extends TimedRobot {
     gameToolDecrementCommand = new GameToolDecrementCommand();
     gameToolSwapCommand = new GameToolSwapCommand();
     gameToolFlowerCommand = new GameToolFlowerCommand();
-    climbCommandGroup = new ClimbCommandGroup();
+    //climbCommandGroup = new ClimbCommandGroup();
     elevatorControl = new ElevatorControl();
     switchControl = new SwitcherControl();
     cargoOutCommand = new CargoOutCommand(0.6,0.6);
     cargoOutLeftCommand = new CargoOutCommand(-1.0,0);
     cargoOutRightCommand = new CargoOutCommand(0,-1.0);
     cargoInCommand = new CargoInCommand();
+    raiseRobotCommand = new RaiseRobotCommand();
+    climberRaiseCommand = new ClimberRaiseBackCommand();
+    climberRaiseFrontCommand = new ClimberRaiseFrontCommand();
+    climberDriveCommand = new ClimberDriveCommand(1, 9);
+    climberControl = new ClimberControl();
     
 
     InitChooser();
@@ -123,12 +133,16 @@ public class Robot extends TimedRobot {
     oi.gameToolDecrementButton.whenPressed(gameToolDecrementCommand);
     oi.gameToolSwapButton.whenPressed(gameToolSwapCommand);
     oi.gameToolFlowerButton.whenPressed(gameToolFlowerCommand);
-    oi.climbButton.whenPressed(climbCommandGroup);
-    oi.climbCancelButton.whenPressed(climbCancelCommand);
+    //oi.climbButton.whenPressed(climbCommandGroup);
+    //oi.climbCancelButton.whenPressed(climbCancelCommand);
     oi.cargoInButton.whileHeld(cargoInCommand);
     oi.cargoOutButton.toggleWhenPressed(cargoOutCommand);
     oi.cargoOutLeftButton.toggleWhenPressed(cargoOutLeftCommand);
     oi.cargoOutRightButton.toggleWhenPressed(cargoOutRightCommand);
+    oi.climbUpButton.whileHeld(raiseRobotCommand);
+    oi.climbDownButton.whileHeld(climberRaiseCommand);
+    oi.climbRaiseFrontButton.whileHeld(climberRaiseFrontCommand);
+    oi.climbDriveButton.whileHeld(climberDriveCommand);
     
   }
 
@@ -160,10 +174,10 @@ public void InitChooser() {
    */
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putNumber("Elevator Height", elevator.currentHeight());
-    SmartDashboard.putNumber("Switcher Height", switcher.getCurrentSwitch());
-    SmartDashboard.putNumber("Intake Left Current", cargo.getLeftCurrent());
-    SmartDashboard.putNumber("Intake Right Current", cargo.getRightCurrent());
+    // SmartDashboard.putNumber("Elevator Height", elevator.currentHeight());
+    // SmartDashboard.putNumber("Switcher Height", switcher.getCurrentSwitch());
+    // SmartDashboard.putNumber("Intake Left Current", cargo.getLeftCurrent());
+    // SmartDashboard.putNumber("Intake Right Current", cargo.getRightCurrent());
 
   }
 
@@ -211,7 +225,14 @@ boolean autoHappened = false;
 
   //  driveSubsystem.PathAutoInit();
     //---------------------------------------------
-    
+    driveSubsystem.setReverse(false);
+    gameToolStateMachine.reset();
+
+		if (driveCommand != null) {
+			driveCommand.start();
+		}
+
+
     m_autonomousCommand = m_chooser.getSelected();
     //gameToolStateMachine.autonomousReset();
     
@@ -277,6 +298,8 @@ boolean autoHappened = false;
     }
     elevatorControl.start();
     switchControl.start();
+    climberControl.start();
+    gameToolStateMachine.autonomousReset();
 
   }
 

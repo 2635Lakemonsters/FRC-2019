@@ -58,10 +58,14 @@ public class OI {
   public Button gameToolDecrementButton = new JoystickButton(leftJoy, RobotMap.GAME_TOOL_DECREMENT_BUTTON);
   public Button gameToolSwapButton = new JoystickButton(leftJoy, RobotMap.GAME_TOOL_SWAP_BUTTON);
   public Button gameToolFlowerButton = new JoystickButton(rightJoy, RobotMap.GAME_TOOL_FLOWER_BUTTON);
-  public Button climbButton = new JoystickButton(rightJoy, RobotMap.CLIMB_BUTTON);
-  public Button climbCancelButton = new JoystickButton(rightJoy, 9);
+  //public Button climbButton = new JoystickButton(rightJoy, RobotMap.CLIMB_BUTTON);
+  //public Button climbCancelButton = new JoystickButton(rightJoy, 9);
   public Button cargoInButton = new JoystickButton(rightJoy, 3);
   public Button cargoOutButton = new JoystickButton(rightJoy, 2);
   public Button cargoOutLeftButton = new JoystickButton(rightJoy, 7);
   public Button cargoOutRightButton = new JoystickButton(rightJoy, 10);
+  public Button climbUpButton = new JoystickButton(leftJoy, 7);
+  public Button climbDownButton = new JoystickButton(leftJoy, 10);
+  public Button climbDriveButton = new JoystickButton(leftJoy, 9);
+  public Button climbRaiseFrontButton = new JoystickButton(leftJoy, 8);
 }

@@ -46,7 +46,7 @@ public class GameToolStateMachine {
         System.out.println(currentState);
     }
     GameTools autonomousResetState() {
-        return GameTools.INITIAL_AUTO;
+        return GameTools.HATCH1F;
     }
     
     public void increment() {
@@ -199,7 +199,7 @@ public class GameToolStateMachine {
 
     public static enum GameTools {
         INITIAL(Height.GROUND, SwitcherState.FLOOR, FlowerBud.BUD, FlowerIO.IN), 
-        INITIAL_AUTO(Height.GROUND, SwitcherState.HATCH, FlowerBud.FLOWER, FlowerIO.IN), //Initial state for auto (we think)
+        INITIAL_AUTO(Height.LEVEL1H, SwitcherState.HATCH, FlowerBud.FLOWER, FlowerIO.IN), //Initial state for auto (we think)
         CARGO1(Height.GROUND, SwitcherState.CARGO, FlowerBud.BUD, FlowerIO.IN),
         CARGO2(Height.LEVEL1B, SwitcherState.CARGO, FlowerBud.BUD, FlowerIO.IN),
         CARGO3(Height.LEVEL2B, SwitcherState.CARGO, FlowerBud.BUD, FlowerIO.IN),

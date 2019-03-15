@@ -179,12 +179,14 @@ public class Climber extends Subsystem {
       reachedBack = false;
     }
 
-    FRExtender.set(ControlMode.Position, intermediateSetPoint);
-    FLExtender.set(ControlMode.Position, -intermediateSetPoint);
-    BExtender.set(ControlMode.Position, -intermediateSetPointBack);
   
   }
  
+  public void setClimber(){
+    FRExtender.set(ControlMode.Position, intermediateSetPoint);
+    FLExtender.set(ControlMode.Position, -intermediateSetPoint);
+    BExtender.set(ControlMode.Position, -intermediateSetPointBack);
+  }
 
   /*
   * One of two options needs to be chosen.
